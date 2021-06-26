@@ -13,11 +13,11 @@ const Cart = () => {
       </div>
       <CartItemNav />
       <div className="cartMain">
-        <div className="cartItemTitle">
+        {/* <div className="cartItemTitle">
           <h4>商品名稱</h4>
           <h4>單價</h4>
           <h4>數量</h4>
-        </div>
+        </div> */}
         <CartItem />
       </div>
       <div className="cartPiceDetil">
@@ -47,6 +47,17 @@ const Cart = () => {
         <button>下一步</button>
       </div>
       <div className="cartCards">
+        <div className="cartCard">
+          <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
+          <div className="cartCardBody">
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore
+              dolorum fugiat a doloremque ducimus? Adipisci doloremque tempore,
+              ad unde facere, porro repudiandae alias harum, rem expedita velit
+              aperiam iusto esse?
+            </p>
+          </div>
+        </div>
         <div className="cartCard">
           <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
           <div className="cartCardBody">
