@@ -4,6 +4,7 @@ import '../../styles/cart.scss'
 import CartTitle from './CartTitle'
 import CartItemNav from './CartItemNav'
 import CartItem from './CartItem'
+import Carousel1 from './Carousel1'
 
 const Cart = () => {
   return (
@@ -46,6 +47,7 @@ const Cart = () => {
         <button>繼續選購</button>
         <button>下一步</button>
       </div>
+      <Carousel1 />
       <div className="cartCards">
         <div className="cartCard">
           <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />

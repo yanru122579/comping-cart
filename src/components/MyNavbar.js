@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import {
-  Navbar,
-  Nav,
-  Form,
-  FormControl,
-  Button,
-  NavDropdown,
-} from 'react-bootstrap'
+import React from 'react'
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 
 // 要使用能有active css效果的NavLink元件
 import { NavLink } from 'react-router-dom'

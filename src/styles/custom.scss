@@ -4,7 +4,7 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
 // 其它要導入覆蓋掉原本的預設bootstrap樣式要放在這下面
-main > .container {
+.container {
   padding: 60px 15px 0;
 }
 

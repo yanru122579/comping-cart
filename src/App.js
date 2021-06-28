@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
+import './App.css'
+//我的頁面
 import Cart from './pages/cart/Cart'
 import CartInfo from './pages/cart/CartInfo'
 import CartDetail from './pages/cart/CartDetail'
 import CartOrder from './pages/cart/CartOrder'
-
-import './App.css'
 
 //組合用元件
 import MyNavbar from './components/MyNavbar'

@@ -11,11 +11,6 @@ const CartInfo = () => {
       </div>
       <h5>1.購物明細</h5>
       <div className="cartMain">
-        <div className="cartItemTitle">
-          <h4>商品名稱</h4>
-          <h4>單價</h4>
-          <h4>數量</h4>
-        </div>
         <CartItem />
       </div>
       <div className="cartPiceDetil">

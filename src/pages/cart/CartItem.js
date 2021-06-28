@@ -1,8 +1,9 @@
 import React from 'react'
 import { FaTrashAlt, FaMinus } from 'react-icons/fa'
-import { BiPlusMedical, BiMinus } from 'react-icons/bi'
+import { BiPlusMedical } from 'react-icons/bi'
 
-const CartItem = () => {
+const CartItem = (props) => {
+  const { v } = props
   return (
     <>
       {/* 舊的 */}
@@ -41,36 +42,11 @@ const CartItem = () => {
           </thead>
           <tbody className="">
             <tr>
-              <th>1.</th>
+              <td>1.</td>
               <td>
-                <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
+                <img src="./img/冰桶.jpeg" alt="" />
               </td>
-              <td>Amenity Dome寢室帳</td>
-              <td>$14.900</td>
-              <td>
-                <div className="tableItem">
-                  <button>
-                    <BiPlusMedical color="#FFBB00" />
-                  </button>
-                  <input type="text" value="3" />
-                  <button>
-                    <FaMinus color="#FFBB00" />
-                  </button>
-                </div>
-              </td>
-              <td>
-                <button>
-                  <FaTrashAlt color="#000" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-          <tbody className="">
-            <tr>
-              <th>1.</th>
-              <td>
-                <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
-              </td>
+
               <td>Amenity Dome寢室帳</td>
               <td>$14.900</td>
               <td>
