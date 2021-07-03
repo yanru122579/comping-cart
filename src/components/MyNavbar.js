@@ -32,6 +32,9 @@ function MyNavbar(props) {
             <Nav.Link as={NavLink} to="/Cartorder">
               訂單詳細
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/ProductList">
+              商品
+            </Nav.Link>
             <NavDropdown title="產品" id="collasible-nav-dropdown">
               <NavDropdown.Item as={NavLink} to="/product/men">
                 MEN

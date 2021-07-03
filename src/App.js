@@ -7,7 +7,8 @@ import Cart from './pages/cart/Cart'
 import CartInfo from './pages/cart/CartInfo'
 import CartDetail from './pages/cart/CartDetail'
 import CartOrder from './pages/cart/CartOrder'
-
+//測試商品頁
+import ProductList from './pages/ProductList/ProductList'
 //組合用元件
 import MyNavbar from './components/MyNavbar'
 import MyFooter from './components/MyFooter'
@@ -23,6 +24,9 @@ function App() {
         <MainContent>
           <ScrollToTop>
             <Switch>
+              <Route path="/ProductList">
+                <ProductList />
+              </Route>
               <Route path="/cartorder">
                 <CartOrder />
               </Route>

@@ -1,6 +1,6 @@
 import React from 'react'
 import CartTitle from './CartTitle'
-import CartItem from './CartItem'
+// import CartItem from './CartItem'
 
 const CartDetail = () => {
   return (
@@ -15,10 +15,7 @@ const CartDetail = () => {
           感謝您的購買
         </h4>
       </div>
-      <h5>購物明細:</h5>
-      <div className="cartMain">
-        <CartItem />
-      </div>
+      <h5>購物明細:</h5><div className="cartMain">{/* <CartItem /> */}</div>
       <div className="cartPiceDetil">
         <div className="cartPiceDetilItem1">
           <p>品項:</p>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 // import { IoIosArrowDown } from 'react-icons/io'
 import { FaSearch } from 'react-icons/fa'
 // import CartItem from './CartItem'
@@ -12,7 +12,7 @@ const CartOrder = () => {
   const [page, setPage] = useState('')
   const [orderClass, setOrderClass] = useState('')
 
-  const [test, setTest] = useState('')
+  // const [test, setTest] = useState('')
 
   //資料載入
 
@@ -23,7 +23,7 @@ const CartOrder = () => {
     const newData = {}
 
     // 連接的伺服器資料網址
-    let url = `http://localhost:6005/cartorder/api/?page=${page}&orderClass=${orderClass}`
+    let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}`
     // url = orderClass ? `${url}&orderClass=${orderClass}` : url
     // 注意資料格式要設定，伺服器才知道是json格式
     const request = new Request(url, {
@@ -35,6 +35,7 @@ const CartOrder = () => {
     })
     const response = await fetch(request)
     const data = await response.json()
+    console.log(data)
     setData(data)
     // console.log('伺服器回傳的json資料', data.rows)
     // 要等驗証過，再設定資料(簡單的直接設定)
@@ -48,8 +49,8 @@ const CartOrder = () => {
   }
 
   const itemSever = async () => {
-    const newData = {}
-    const url = `http://localhost:6005/cartorder/item/${select}`
+    // const newData = {}
+    const url = `http://localhost:4000/cartorder/item/${select}`
     const request = new Request(url, {
       method: 'GET',
       headers: new Headers({
@@ -59,6 +60,7 @@ const CartOrder = () => {
     })
     const response = await fetch(request)
     const data = await response.json()
+    console.log(data)
     setDataItem(data)
   }
 

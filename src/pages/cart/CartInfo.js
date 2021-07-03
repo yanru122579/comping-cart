@@ -1,18 +1,89 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import '../../styles/cart.scss'
-import CartTitle from './CartTitle'
-import CartItem from './CartItem'
+// import CartTitle from './CartTitle'
+// import CartItem from './CartItem'
+// import Item from 'antd/lib/list/Item'
 
-const CartInfo = () => {
+function CartInfo(props) {
+  const { mycartDisplay, setTotal, getSession } = props
+  const [inputs, setInputs] = useState({})
+
+  useEffect(() => {
+    setInputs({
+      nNN: '1',
+      nAA: '1',
+      nCC: '1',
+      nEE: '1',
+      cartPayId: '1',
+      cartLogisticsId: '1',
+      mid: '1',
+      cartTotal: '1',
+      cartDescription: '1',
+      cartStatus: '1',
+    })
+  }, [])
+
+  //寫入訂單
+  async function addCartToSever(e) {
+    e.preventDefault()
+    console.log('session', getSession[0].product_name)
+    let data = {
+      orderItem: [],
+    }
+    for (let item of getSession) {
+      const tempObj = {
+        product_id: item.product_id,
+        cartName: item.product_name,
+        cartBuyQty: item.quantity,
+        cartBuyP: item.product_price,
+      }
+      data.orderItem.push(tempObj)
+    }
+    data.orderInfo = {
+      nNN: inputs.nNN,
+      nAA: inputs.nAA,
+      nCC: inputs.nCC,
+      nEE: inputs.nEE,
+      cartPayId: inputs.cartPayId,
+      cartLogisticsId: inputs.cartLogisticsId,
+      mid: inputs.mid,
+      cartTotal: inputs.cartTotal,
+      cartDescription: inputs.cartDescription,
+      cartStatus: inputs.cartStatus,
+    }
+    console.log('一開始收到的資料', data)
+    //寫入的網址
+    const url = 'http://localhost:4000/cartorder/add/'
+
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    })
+    console.log('JSON字串', JSON.stringify(data))
+    const response = await fetch(request)
+    const dataRes = await response.json()
+
+    console.log('伺服器回傳的json資料', dataRes)
+  }
+  //處理每個欄位的變動
+  const handelChange = (e) => {
+    const newInputs = {
+      ...inputs,
+      [e.target.name]: e.target.value,
+    }
+    setInputs(newInputs)
+  }
   return (
     <>
-      <div className="container">
+      {/* <div className="container">
         <CartTitle />
-      </div>
-      <h5>1.購物明細</h5>
-      <div className="cartMain">
-        <CartItem />
-      </div>
+      </div> */}
+      {/* <h5>1.購物明細</h5> */}
+      <div className="cartMain">{/* <CartItem /> */}</div>
       <div className="cartPiceDetil">
         <div className="cartPiceDetilItem1">
           <p>品項:</p>
@@ -24,33 +95,64 @@ const CartInfo = () => {
       </div>
       <h5>2.收貨人資料</h5>
       <div className="cartMain">
-        <form action="" className="cartInfoMenber">
+        <form
+          action=""
+          className="cartInfoMenber"
+          onSubmit={addCartToSever}
+          onChange={handelChange}
+        >
           <label htmlFor="">訂購人姓名:</label>
           <br />
-          <input type="text" />
+          <input type="text" disabled />
           <br />
           <label htmlFor="">訂購人手機:</label>
           <br />
-          <input type="text" />
+          <input type="text" disabled />
           <br />
           <label htmlFor="">訂購人信箱:</label>
           <br />
-          <input type="text" />
+          <input type="text" disabled />
           <br />
-          <input type="checkbox" />
+          <input type="checkbox" style={{ width: '20px' }} />
           <label htmlFor="">同訂購人</label>
           <br />
           <label htmlFor="">收件人姓名:</label>
           <br />
-          <input type="text" />
+          <input
+            type="text"
+            name="nNN"
+            value={inputs.nNN}
+            onChange={handelChange}
+            placeholder="請輸入收件人姓名"
+          />
           <br />
           <label htmlFor="">收件人手機:</label>
           <br />
-          <input type="text" />
+          <input
+            type="text"
+            name="nCC"
+            value={inputs.nCC}
+            onChange={handelChange}
+            placeholder="請輸入手機"
+          />
           <br />
+          {/* 商品加入區測試用 */}
+          <input
+            type="text"
+            hidden
+            name={inputs.cartName}
+            value={mycartDisplay.name}
+            onChange={handelChange}
+          />
           <label htmlFor="">收件人信箱:</label>
           <br />
-          <input type="text" />
+          <input
+            type="email"
+            name="nEE"
+            value={inputs.nEE}
+            onChange={handelChange}
+            placeholder="請輸入信箱"
+          />
           <br />
           <label htmlFor="">收件人地址:</label>
           <br />
@@ -66,7 +168,13 @@ const CartInfo = () => {
             </select>
           </div>
           <br />
-          <input type="text" value="請輸入地址" />
+          <input
+            type="text"
+            name="nAA"
+            value={inputs.nAA}
+            onChange={handelChange}
+            placeholder="請輸入地址"
+          />
           <br />
           <label htmlFor="">發票資訊</label>
           <br />
@@ -75,31 +183,54 @@ const CartInfo = () => {
           </select>
         </form>
       </div>
+      <br />
       <h5>3.付款方式</h5>
+
       <div className="cartMain">
-        <form action="" className="cartInfoMenber">
+        <form
+          action=""
+          className="cartInfoMenber"
+          onSubmit={addCartToSever}
+          onChange={handelChange}
+        >
           <label htmlFor="">選擇付款方式:</label>
-          <input type="text" />
+          <select name="" id="">
+            <option value="">信用卡支付</option>
+            <option value="">貨到付款</option>
+          </select>
           <div>
             <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
           </div>
           <label htmlFor="">卡號:</label>
-          <input type="text" />
+          <input type="text" placeholder="卡號" />
           <br />
           <label htmlFor="">持卡人:</label>
-          <input type="text" />
+          <input type="text" placeholder="持卡人姓名" />
           <br />
-          <label htmlFor="">選到期日:</label>
-          <input type="text" />
+          <label htmlFor="">有效日期:</label>
+          <br />
+          <input type="text" style={{ width: '180px' }} placeholder="MM/YY" />
+
           <br />
           <label htmlFor="">驗證碼:</label>
-          <input type="text" />
+          <br />
+          <input type="text" style={{ width: '180px' }} placeholder="XXX" />
           <br />
         </form>
       </div>
       <div className="cartPiceBtn">
-        <button>上一頁</button>
-        <button>確認結帳</button>
+        <button
+          onClick={() => {
+            setTotal(false)
+          }}
+        >
+          上一頁
+        </button>
+        <form action="" onSubmit={addCartToSever} onChange={handelChange}>
+          <button type="submit" onSubmit={addCartToSever}>
+            確認結帳
+          </button>
+        </form>
       </div>
     </>
   )
