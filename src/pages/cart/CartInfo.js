@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
+// import { v1 as uuidv1 } from 'uuid'
 // import CartTitle from './CartTitle'
 // import CartItem from './CartItem'
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
+  const history = useHistory()
   const { mycartDisplay, setTotal, getSession } = props
   const [inputs, setInputs] = useState({})
 
@@ -26,7 +29,7 @@ function CartInfo(props) {
   //寫入訂單
   async function addCartToSever(e) {
     e.preventDefault()
-    console.log('session', getSession[0].product_name)
+    const orderid = +new Date()
     let data = {
       orderItem: [],
     }
@@ -36,6 +39,7 @@ function CartInfo(props) {
         cartName: item.product_name,
         cartBuyQty: item.quantity,
         cartBuyP: item.product_price,
+        cartOrderId: orderid,
       }
       data.orderItem.push(tempObj)
     }
@@ -50,6 +54,7 @@ function CartInfo(props) {
       cartTotal: inputs.cartTotal,
       cartDescription: inputs.cartDescription,
       cartStatus: inputs.cartStatus,
+      cartOrderId: orderid,
     }
     console.log('一開始收到的資料', data)
     //寫入的網址
@@ -68,6 +73,9 @@ function CartInfo(props) {
     const dataRes = await response.json()
 
     console.log('伺服器回傳的json資料', dataRes)
+
+    // 送出資料後跳轉頁面
+    history.push('/cartdetail', { cartdId: orderid })
   }
   //處理每個欄位的變動
   const handelChange = (e) => {

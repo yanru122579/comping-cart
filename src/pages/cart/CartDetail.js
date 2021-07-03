@@ -1,8 +1,12 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import CartTitle from './CartTitle'
 // import CartItem from './CartItem'
 
 const CartDetail = () => {
+  const location = useLocation()
+  const cartId = location?.state?.cartId || 0
+
   return (
     <>
       <div className="container">

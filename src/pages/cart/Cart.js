@@ -92,10 +92,11 @@ const Cart = () => {
   const sum = (items) => {
     let total = 0
     for (let i = 0; i < items.length; i++) {
-      total += items[i].amount * items[i].price
+      total += items[i].product_price * items[i].quantity
     }
     return total
   }
+
   // product acivity place
   const typeObj = {
     product: (

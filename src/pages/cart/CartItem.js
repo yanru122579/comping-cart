@@ -4,15 +4,8 @@ import { BiPlusMedical } from 'react-icons/bi'
 import { useHistory } from 'react-router-dom'
 
 const CartItem = (props) => {
-  const {
-    mycartDisplay,
-    sum,
-    total,
-    setTotal,
-    getSession,
-    sessionUpdate,
-    sessionDelete,
-  } = props
+  const { sum, total, setTotal, getSession, sessionUpdate, sessionDelete } =
+    props
   const history = useHistory()
   const [price, setPrice] = useState()
   return (
@@ -108,11 +101,11 @@ const CartItem = (props) => {
               <h4>總計金額:&emsp;</h4>
             </div>
             <div className="cartPiceDetilItem2">
-              <p>共2項</p>
-              <p>NT $ {sum(mycartDisplay)}</p>
+              <p>共項</p>
+              <p>NT $ {sum(getSession)}</p>
               <p>-NT $ 1130</p>
               <p>NT $ 300</p>
-              <h3>NT $ {sum(mycartDisplay) - 1130 - 300}</h3>
+              <h3>NT $ {sum(getSession) - 1130 - 300}</h3>
             </div>
           </div>
           {/* <div className="cartPiceDetil">
