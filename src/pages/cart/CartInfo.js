@@ -8,23 +8,36 @@ import '../../styles/cart.scss'
 
 function CartInfo(props) {
   const history = useHistory()
-  const { mycartDisplay, setTotal, getSession } = props
-  const [inputs, setInputs] = useState({})
+  const { setTotal, getSession, sessionClear } = props
+  const [inputs, setInputs] = useState({
+    nNN: '玄彬',
+    nAA: '台北市大安區大安路一段',
+    nCC: '0919999999',
+    nEE: 'eaag@gmail.com',
+    cartPayId: '1',
+    cartLogisticsId: '1',
+    mid: '1',
+    cartTotal: '1',
+    cartDescription: '1',
+    cartStatus: '待出貨',
+    orderclass: '1',
+  })
 
-  useEffect(() => {
-    setInputs({
-      nNN: '1',
-      nAA: '1',
-      nCC: '1',
-      nEE: '1',
-      cartPayId: '1',
-      cartLogisticsId: '1',
-      mid: '1',
-      cartTotal: '1',
-      cartDescription: '1',
-      cartStatus: '1',
-    })
-  }, [])
+  // useEffect(() => {
+  //   setInputs({
+  //     nNN: '玄彬',
+  //     nAA: '台北市大安區大安路一段',
+  //     nCC: '0919999999',
+  //     nEE: 'eaag@gmail.com',
+  //     cartPayId: '1',
+  //     cartLogisticsId: '1',
+  //     mid: '1',
+  //     cartTotal: '1',
+  //     cartDescription: '1',
+  //     cartStatus: '待出貨',
+  //     orderclass: '1',
+  //   })
+  // }, [])
 
   //寫入訂單
   async function addCartToSever(e) {
@@ -55,6 +68,8 @@ function CartInfo(props) {
       cartDescription: inputs.cartDescription,
       cartStatus: inputs.cartStatus,
       cartOrderId: orderid,
+      orderclass: inputs.orderclass,
+      created_at: new Date(),
     }
     console.log('一開始收到的資料', data)
     //寫入的網址
@@ -75,7 +90,7 @@ function CartInfo(props) {
     console.log('伺服器回傳的json資料', dataRes)
 
     // 送出資料後跳轉頁面
-    history.push('/cartdetail', { cartdId: orderid })
+    history.push('/cartdetail', { cartId: data })
   }
   //處理每個欄位的變動
   const handelChange = (e) => {
@@ -149,7 +164,6 @@ function CartInfo(props) {
             type="text"
             hidden
             name={inputs.cartName}
-            value={mycartDisplay.name}
             onChange={handelChange}
           />
           <label htmlFor="">收件人信箱:</label>
@@ -235,7 +249,13 @@ function CartInfo(props) {
           上一頁
         </button>
         <form action="" onSubmit={addCartToSever} onChange={handelChange}>
-          <button type="submit" onSubmit={addCartToSever}>
+          <button
+            type="submit"
+            onSubmit={addCartToSever}
+            onClick={() => {
+              sessionClear()
+            }}
+          >
             確認結帳
           </button>
         </form>

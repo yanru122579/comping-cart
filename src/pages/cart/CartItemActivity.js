@@ -4,7 +4,7 @@ import { BiPlusMedical } from 'react-icons/bi'
 
 const CartItemActivity = (props) => {
   const { mycartDisplay, updateCartToLocalStorage, handleDelete, sum } = props
-  const [price, setPrice] = useState()
+
   return (
     <>
       <div className="cartMain">

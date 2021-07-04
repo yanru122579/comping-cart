@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 
 function ProductList(props) {
-  const [mycart, setMycart] = useState([])
+  const setMycart = useState([])[1]
   const [show, setShow] = useState(false)
   const [productName, setProductName] = useState('')
-  const [sdata, setSdata] = useState()
+  const setSdata = useState()[1]
 
   const num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   //自制增加session
@@ -76,16 +76,6 @@ function ProductList(props) {
         </Button>
       </Modal.Footer>
     </Modal>
-  )
-
-  const spinner = (
-    <>
-      <div className="d-flex justify-content-center">
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
-    </>
   )
 
   const display = (

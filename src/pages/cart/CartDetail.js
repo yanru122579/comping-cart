@@ -1,11 +1,19 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useHistory } from 'react-router-dom'
 import CartTitle from './CartTitle'
+import moment from 'moment'
+
 // import CartItem from './CartItem'
 
 const CartDetail = () => {
+  const history = useHistory()
   const location = useLocation()
   const cartId = location?.state?.cartId || 0
+  const [order, setOrder] = useState()
+
+  useEffect(() => {
+    setOrder(location.state)
+  }, [])
 
   return (
     <>
@@ -19,7 +27,40 @@ const CartDetail = () => {
           感謝您的購買
         </h4>
       </div>
-      <h5>購物明細:</h5><div className="cartMain">{/* <CartItem /> */}</div>
+      <h5>購物明細:</h5>
+      <div className="cartMain">
+        <div className=" cartTable">
+          <table className="table ">
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>商品名稱</th>
+                <th>價格</th>
+                <th>數量</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody className="">
+              {cartId?.orderItem?.map((v, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{i + 1}</td>
+                    <td>
+                      <img src="" alt="" />
+                    </td>
+
+                    <td>{v.cartName}</td>
+                    <td>{v.cartBuyP}</td>
+
+                    <td>{v.cartBuyQty}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div className="cartPiceDetil">
         <div className="cartPiceDetilItem1">
           <p>品項:</p>
@@ -44,13 +85,13 @@ const CartDetail = () => {
         </div>
         <div className="CartDetail item2">
           <ul>
-            <li>20201000</li>
-            <li>2021/05/29</li>
-            <li>準備中</li>
-            <li>宅配</li>
-            <li>皮卡丘</li>
-            <li>0978978978</li>
-            <li>a123@gmail.com</li>
+            <li>{cartId.orderInfo.cartOrderId}</li>
+            <li>{moment(cartId.orderInfo.created_at).format('YYYY-MM-DD')}</li>
+            <li>{cartId.orderInfo.cartStatus}</li>
+            <li>{cartId.orderInfo.cartLogisticsId}</li>
+            <li>{cartId.orderInfo.nNN}</li>
+            <li>{cartId.orderInfo.nCC}</li>
+            <li>{cartId.orderInfo.nEE}</li>
           </ul>
         </div>
         <div className="CartDetail item3">
@@ -65,18 +106,25 @@ const CartDetail = () => {
         </div>
         <div className="CartDetail item4">
           <ul>
-            <li>皮丘</li>
-            <li>0911111111</li>
-            <li>def@gmail.com</li>
-            <li>台北市大安區大安路一段１號</li>
-            <li>信用卡支付</li>
+            <li>{cartId.orderInfo.nNN}</li>
+            <li>{cartId.orderInfo.nCC}</li>
+            <li>{cartId.orderInfo.nEE}</li>
+            <li>{cartId.orderInfo.nAA}</li>
+            <li>{cartId.orderInfo.cartPayId}</li>
             <li>已付清</li>
           </ul>
         </div>
       </div>
       <div className="cartPiceBtn">
         <button>回到商品頁面</button>
-        <button>回到訂單頁面</button>
+        <button
+          onClick={() => {
+            history.replace('', null)
+            history.push('/cartorder')
+          }}
+        >
+          回到訂單頁面
+        </button>
       </div>
     </>
   )

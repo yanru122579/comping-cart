@@ -6,7 +6,6 @@ import CartItemNav from './CartItemNav'
 import CartItem from './CartItem'
 import CartItemPlace from './CartItemPlace'
 import CartItemActivity from './CartItemActivity'
-import CartInfo from './CartInfo'
 
 const Cart = () => {
   //node 變更商品數量
@@ -25,6 +24,21 @@ const Cart = () => {
     // console.log('data', data)
     setSessionUp(data)
   }
+  //node 清空購物車
+  const sessionClear = async () => {
+    const url = `http://localhost:4000/cart/clear`
+    const request = new Request(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: new Headers({
+        Accept: 'application/json',
+        // 'Content-Type': 'application/json',
+      }),
+    })
+    const response = await fetch(request)
+    const data = await response.json()
+    setSessionCl(data)
+  }
   //node 刪除商品
   const sessionDelete = async (sid) => {
     const url = `http://localhost:4000/cart/remove/${sid}`
@@ -36,6 +50,7 @@ const Cart = () => {
         // 'Content-Type': 'application/json',
       }),
     })
+
     const response = await fetch(request)
     const data = await response.json()
     console.log(data)
@@ -49,12 +64,13 @@ const Cart = () => {
   // const [mycart, setMycart] = useState([])
   // const [dataLoading, setDataLoading] = useState(false)
   //商品變動
-  const [mycartDisplay, setMycartDisplay] = useState([])
+
   const [type, setType] = useState('product')
   const [total, setTotal] = useState(false)
   const [getSession, setGetSession] = useState([])
-  const [sessionUp, setSessionUp] = useState([])
-  const [sessionDl, setSessionDl] = useState([])
+  const setSessionUp = useState([])[1]
+  const setSessionDl = useState([])[1]
+  const setSessionCl = useState([])[1]
 
   //node的接收商品
   const sessionServer = async () => {
@@ -79,7 +95,7 @@ const Cart = () => {
     sessionServer()
   }, [])
   // useEffect(() => {
-  //   sessionDelete()
+  //   sessionServer()
   // }, [getSession])
 
   useEffect(() => {
@@ -96,12 +112,20 @@ const Cart = () => {
     }
     return total
   }
+  //計件用
+  const pTotal = (items) => {
+    let total = 0
+    for (let i = 0; i < items.length; i++) {
+      total += parseInt(items[i].quantity)
+    }
+    return total
+  }
 
   // product acivity place
   const typeObj = {
     product: (
       <CartItem
-        mycartDisplay={mycartDisplay}
+        pTotal={pTotal}
         sum={sum}
         total={total}
         setTotal={setTotal}
@@ -109,19 +133,13 @@ const Cart = () => {
         setGetSession={setGetSession}
         sessionUpdate={sessionUpdate}
         sessionDelete={sessionDelete}
+        sessionClear={sessionClear}
       />
     ),
-    activity: (
-      <CartItemActivity
-        mycartDisplay={mycartDisplay}
-        sum={sum}
-        total={total}
-        setTotal={setTotal}
-      />
-    ),
+    activity: <CartItemActivity sum={sum} total={total} setTotal={setTotal} />,
     place: (
       <CartItemPlace
-        mycartDisplay={mycartDisplay}
+        // mycartDisplay={mycartDisplay}
         sum={sum}
         total={total}
         setTotal={setTotal}
@@ -136,25 +154,7 @@ const Cart = () => {
       </div>
       {!total && <CartItemNav setType={setType} type={type} />}
       {typeObj[type]}
-      {/* <div className="cartPiceBtn">
-        <button>繼續選購</button>
-        <button
-          onClick={() => {
-            setTotal(true)
-          }}
-        >
-          下一步
-        </button>
-      </div> */}
-      {total && (
-        <CartInfo
-          mycartDisplay={mycartDisplay}
-          sum={sum}
-          total={total}
-          setTotal={setTotal}
-          getSession={getSession}
-        />
-      )}
+
       {!total && (
         <>
           <div className="cartCards">
