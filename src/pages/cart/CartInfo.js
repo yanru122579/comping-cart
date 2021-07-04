@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
-// import { v1 as uuidv1 } from 'uuid'
+import { countries, townships, postcodes } from '../../json/townships'
+
 // import CartTitle from './CartTitle'
 // import CartItem from './CartItem'
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
+  console.log(countries, townships, postcodes)
   const history = useHistory()
-  const { setTotal, getSession, sessionClear } = props
+  const { setTotal, getSession, sessionClear, pTotal, sum } = props
+  //記錄陣列的索引值,預設值是-1,相當於'請選擇xxx'
+  const [country, setCountry] = useState(-1)
+  const [township, setTownship] = useState(-1)
+
   const [inputs, setInputs] = useState({
     nNN: '玄彬',
     nAA: '台北市大安區大安路一段',
@@ -22,22 +28,6 @@ function CartInfo(props) {
     cartStatus: '待出貨',
     orderclass: '1',
   })
-
-  // useEffect(() => {
-  //   setInputs({
-  //     nNN: '玄彬',
-  //     nAA: '台北市大安區大安路一段',
-  //     nCC: '0919999999',
-  //     nEE: 'eaag@gmail.com',
-  //     cartPayId: '1',
-  //     cartLogisticsId: '1',
-  //     mid: '1',
-  //     cartTotal: '1',
-  //     cartDescription: '1',
-  //     cartStatus: '待出貨',
-  //     orderclass: '1',
-  //   })
-  // }, [])
 
   //寫入訂單
   async function addCartToSever(e) {
@@ -113,7 +103,8 @@ function CartInfo(props) {
           <p>總計金額:</p>
         </div>
         <div className="cartPiceDetilItem2">
-          <p>共 3 項</p> <p>NT $ 1130</p>
+          <p>共 {pTotal(getSession)} 項</p>{' '}
+          <p>NT $ {sum(getSession) - 1130 + pTotal(getSession) * 100}</p>
         </div>
       </div>
       <h5>2.收貨人資料</h5>
@@ -179,14 +170,50 @@ function CartInfo(props) {
           <label htmlFor="">收件人地址:</label>
           <br />
           <div>
-            <select name="" id="">
-              <option value="">選擇郵遞區號</option>
+            <select
+              value={country}
+              onChange={(e) => {
+                // 將字串轉成數字
+                setCountry(+e.target.value)
+                // 重置township的值
+                setTownship(-1)
+              }}
+            >
+              <option value="-1">選擇縣市</option>
+              {countries.map((value, index) => (
+                <option key={index} value={index}>
+                  {value}
+                </option>
+              ))}
             </select>
-            <select name="" id="">
-              <option value="">選擇縣市</option>
+            <select
+              value={township}
+              onChange={(e) => {
+                // 將字串轉成數字
+                setTownship(+e.target.value)
+              }}
+            >
+              <option value="-1">選擇區域</option>
+              {country > -1 &&
+                townships[country].map((value, index) => (
+                  <option key={index} value={index}>
+                    {value}
+                  </option>
+                ))}
             </select>
-            <select name="" id="">
-              <option value="">選擇區域</option>
+            {/* 如果country與township的索引值均大於-1時(也就是都有選的情況下)，呈現postcode */}
+            {/* `條件 && 呈現` 是 `if(條件){呈現}` 的簡寫法，只在React JSX中可以使用 */}
+
+            {/* ------------ */}
+            <select
+              name=""
+              id=""
+              value={country > -1 && township > -1 && postcodes[township]}
+            >
+              <option>
+                郵遞區號:
+                {country > -1 && township > -1 && postcodes[country][township]}
+              </option>
             </select>
           </div>
           <br />

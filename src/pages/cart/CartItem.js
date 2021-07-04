@@ -124,14 +124,11 @@ const CartItem = (props) => {
               <p>共{pTotal(getSession)}項</p>
               <p>NT $ {sum(getSession)}</p>
               <p>-NT $ 1130</p>
-              <p>NT $ 300</p>
-              <h3>NT $ {sum(getSession) - 1130 - 300}</h3>
+              <p>NT $ +{pTotal(getSession) * 100}</p>
+              <h3>NT $ {sum(getSession) - 1130 + pTotal(getSession) * 100}</h3>
             </div>
           </div>
-          {/* <div className="cartPiceDetil">
-            <h4>總計金額:&emsp;</h4>
-            <h3>NT $ {sum(mycartDisplay) - 1130 - 300}</h3>
-          </div> */}
+
           <div className="cartPiceBtn">
             <button>繼續選購</button>
             <button
@@ -146,6 +143,7 @@ const CartItem = (props) => {
       )}
       {total && (
         <CartInfo
+          pTotal={pTotal}
           sum={sum}
           total={total}
           setTotal={setTotal}
