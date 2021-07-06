@@ -3,7 +3,6 @@ import { useLocation, useHistory } from 'react-router-dom'
 import CartTitle from './CartTitle'
 import moment from 'moment'
 
-
 // import CartItem from './CartItem'
 
 const CartDetail = () => {
@@ -68,7 +67,7 @@ const CartDetail = () => {
           <p>總共消費金額:</p>
         </div>
         <div className="cartPiceDetilItem2">
-          <p>共 3 項</p> <p>NT $ 1130</p>
+          <p>共 3 項</p> <p>{cartId.orderInfo.cartTotal}</p>
         </div>
       </div>
       <h5>訂單明細:</h5>

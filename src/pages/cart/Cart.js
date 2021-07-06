@@ -6,6 +6,11 @@ import CartItemNav from './CartItemNav'
 import CartItem from './CartItem'
 import CartItemPlace from './CartItemPlace'
 import CartItemActivity from './CartItemActivity'
+//信用卡
+import PaymentForm from './PaymentForm'
+import 'react-credit-cards/es/styles-compiled.css'
+
+import Register from './Register'
 
 const Cart = () => {
   //node 變更商品數量
@@ -149,11 +154,13 @@ const Cart = () => {
 
   return (
     <>
+      <PaymentForm />
       <div className="container ">
         <CartTitle />
       </div>
       {!total && <CartItemNav setType={setType} type={type} />}
       {typeObj[type]}
+      <Register />
 
       {!total && (
         <>

@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
 import { countries, townships, postcodes } from '../../json/townships'
-//reactBootstrap用
-import CartModalForm from './CartModalForm'
-import { Button } from 'react-bootstrap'
-
-// import { withFormik, Form, Field, ErrorMessage } from 'formik'
-// import * as yup from 'yup'
+import { withFormik, Form, Field, ErrorMessage } from 'formik'
+import * as yup from 'yup'
 
 //錯誤訊息的style
 const errMsg = {
@@ -21,8 +17,6 @@ const errMsg = {
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
-  //reactBootstrap用
-  const [modalShow, setModalShow] = React.useState(false)
   const history = useHistory()
   const { setTotal, getSession, sessionClear, pTotal, sum } = props
   //記錄陣列的索引值,預設值是-1,相當於'請選擇xxx'
@@ -37,7 +31,7 @@ function CartInfo(props) {
     cartPayId: '1',
     cartLogisticsId: '1',
     mid: '1',
-    cartTotal: sum(getSession) - 1130 + pTotal(getSession) * 100,
+    cartTotal: '1',
     cartDescription: '1',
     cartStatus: '待出貨',
     orderclass: '1',
@@ -92,8 +86,7 @@ function CartInfo(props) {
     const dataRes = await response.json()
 
     console.log('伺服器回傳的json資料', dataRes)
-    //送出資料後清除session
-    sessionClear()
+
     // 送出資料後跳轉頁面
     history.push('/cartdetail', { cartId: data })
   }
@@ -132,14 +125,6 @@ function CartInfo(props) {
     }
     setFieldErrors(updatedFieldErrors)
   }
-
-  const handleInputChange = (e) => {
-    if (e == 2) {
-      setModalShow(true)
-    } else {
-      setModalShow(false)
-    }
-  }
   return (
     <>
       {/* <div className="container">
@@ -160,13 +145,14 @@ function CartInfo(props) {
       <h5>2.收貨人資料</h5>
       <div className="cartMain">
         <form
+          action=""
           className="cartInfoMenber"
           onSubmit={addCartToSever}
           onChange={handleChangeInput}
           onInvalid={handleInvalid}
         >
           <label htmlFor="">訂購人姓名:</label>
-          {/* <br /> */}
+          <br />
           <input type="text" disabled />
           <br />
           <label htmlFor="">訂購人手機:</label>
@@ -180,12 +166,7 @@ function CartInfo(props) {
           <input type="checkbox" style={{ width: '20px' }} />
           <label htmlFor="">同訂購人</label>
           <br />
-          <label htmlFor="">
-            收件人姓名:
-            {fieldErrors.nNN && (
-              <small className="text-danger ">{fieldErrors.nNN}</small>
-            )}
-          </label>
+          <label htmlFor="">收件人姓名:</label>
           <br />
           <input
             type="text"
@@ -196,14 +177,11 @@ function CartInfo(props) {
             required
           />
           <br />
-
-          <label>
-            收件人手機:
-            {fieldErrors.nCC && (
-              <small className="text-danger "> {fieldErrors.nCC}</small>
-            )}
-          </label>
-
+          {fieldErrors.nNN && (
+            <small className="text-danger form-text">{fieldErrors.nNN}</small>
+          )}
+          <br />
+          <label htmlFor="">收件人手機:</label>
           <br />
           <input
             type="text"
@@ -211,19 +189,17 @@ function CartInfo(props) {
             value={inputs.nCC}
             onChange={handelChange}
             placeholder="請輸入手機"
-            pattern="09\d{2}-?\d{3}-?\d{3}"
-            maxlength="10"
-            required
+            required={true}
           />
-
           <br />
-          <label htmlFor="">
-            收件人信箱:
-            {fieldErrors.nEE && (
-              <small className="text-danger ">{fieldErrors.nEE}</small>
-            )}
-          </label>
-
+          {/* 商品加入區測試用 */}
+          <input
+            type="text"
+            hidden
+            name={inputs.cartName}
+            onChange={handelChange}
+          />
+          <label htmlFor="">收件人信箱:</label>
           <br />
           <input
             type="email"
@@ -233,14 +209,8 @@ function CartInfo(props) {
             placeholder="請輸入信箱"
             required
           />
-
           <br />
-          <label htmlFor="">
-            收件人地址:
-            {fieldErrors.nAA && (
-              <small className="text-danger form-text">{fieldErrors.nAA}</small>
-            )}
-          </label>
+          <label htmlFor="">收件人地址:</label>
           <br />
           <div>
             <select
@@ -274,6 +244,7 @@ function CartInfo(props) {
                   </option>
                 ))}
             </select>
+
             <select
               name=""
               id=""
@@ -299,79 +270,68 @@ function CartInfo(props) {
           <select name="" id="">
             <option value="">捐贈發票</option>
           </select>
-          <h5>3.付款方式</h5>
+        </form>
+      </div>
+      <br />
+      <h5>3.付款方式</h5>
+
+      <div className="cartMain">
+        <form
+          action=""
+          className="cartInfoMenber"
+          onSubmit={addCartToSever}
+          onChange={handleChangeInput}
+          onInvalid={handleInvalid}
+        >
           <label htmlFor="">選擇付款方式:</label>
-          <select
-            name=""
-            id=""
-            onChange={(e) => {
-              handleInputChange(e.target.value)
-            }}
-          >
-            <option value="1">貨到付款</option>
-            <option value="2">信用卡支付</option>
+          <select name="" id="">
+            <option value="">信用卡支付</option>
+            <option value="">貨到付款</option>
           </select>
           <div>
             <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
           </div>
           <label htmlFor="">卡號:</label>
-          <input type="text" placeholder="卡號" name="cardNum" />
+          <input type="text" placeholder="卡號" />
           <br />
           <label htmlFor="">持卡人:</label>
-          <input type="text" placeholder="持卡人姓名" name="cardName" />
+          <input type="text" placeholder="持卡人姓名" />
           <br />
           <label htmlFor="">有效日期:</label>
           <br />
-          <input
-            type="text"
-            style={{ width: '180px' }}
-            placeholder="MM/YY"
-            name="cardDate"
-          />
+          <input type="text" style={{ width: '180px' }} placeholder="MM/YY" />
 
           <br />
           <label htmlFor="">驗證碼:</label>
           <br />
-          <input
-            type="text"
-            style={{ width: '180px' }}
-            placeholder="XXX"
-            name="cardCheck"
-          />
+          <input type="text" style={{ width: '180px' }} placeholder="XXX" />
           <br />
+        </form>
+      </div>
+      <div className="cartPiceBtn">
+        <button
+          onClick={() => {
+            setTotal(false)
+          }}
+        >
+          上一頁
+        </button>
+        <form
+          action=""
+          onSubmit={addCartToSever}
+          onChange={handleChangeInput}
+          onInvalid={handleInvalid}
+        >
           <button
+            type="submit"
+            onSubmit={() => addCartToSever()}
+            // disabled={isSubmitting}
             onClick={() => {
-              setModalShow(true)
+              sessionClear()
             }}
-          ></button>
-          <>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-              填入信用卡
-            </Button>
-
-            <CartModalForm
-              show={modalShow}
-              onHide={() => setModalShow(false)}
-              setModalShow={setModalShow}
-            />
-          </>
-          <div className="cartPiceBtn cartInfoBtn">
-            <button
-              onClick={() => {
-                setTotal(false)
-              }}
-            >
-              上一頁
-            </button>
-
-            <button
-              type="submit"
-              onSubmit={() => addCartToSever()}
-              // disabled={isSubmitting}
-            >
-              確認結帳
-            </button>
-          </div>
+          >
+            確認結帳
+          </button>
         </form>
       </div>
     </>
