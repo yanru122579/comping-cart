@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 // import { withFormik, Form, Field, ErrorMessage, Formik } from 'formik'
 // import * as Yup from 'yup'
@@ -8,7 +8,10 @@ import Cards from 'react-credit-cards'
 
 const PaymentForm = (props) => {
   const { setModalShow, setPay } = props
+  //表單的ref
+  const formRef = useRef(null)
   const [focus, setFocus] = useState('')
+  //定義個屬性欄位
   const [inputs, setInputs] = useState({
     cvc: '',
     expiry: '',
@@ -37,19 +40,12 @@ const PaymentForm = (props) => {
     }
     setInputs(newInputs)
   }
+  //處理聚焦
   const handleInputFocus = (e) => {
     setFocus(e.target.name)
   }
-  //有錯誤的訊息會觸發在這裡
-  const handleInvalid = (e) => {
-    e.preventDefault()
 
-    const updatedFieldErrors = {
-      ...fieldErrors,
-      [e.target.name]: e.target.validationMessage,
-    }
-    setFieldErrors(updatedFieldErrors)
-  }
+  //form 有更動會觸發這個韓式
   const handleChange = (e) => {
     console.log('更動欄位:', e.target.name)
     //該欄位錯誤訊息清空
@@ -59,7 +55,7 @@ const PaymentForm = (props) => {
     }
     setFieldErrors(updatedFieldErrors)
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     // e.preventDefault()
     if (
       inputs.number.length >= 16 &&
@@ -74,6 +70,21 @@ const PaymentForm = (props) => {
         setModalShow(false)
         Swal.fire('認證成功!', '您的信用卡已成功認證!', 'success')
       }, 400)
+    } else {
+      const NewFieldErrors = {}
+      if (inputs.number.length <= 15) {
+        NewFieldErrors.number = '請輸入正確卡號'
+      }
+      if (inputs.name === '') {
+        NewFieldErrors.name = '請輸入持卡人姓名'
+      }
+      if (inputs.expiry.length <= 4) {
+        NewFieldErrors.expiry = '請輸入有效日期'
+      }
+      if (inputs.cvc.length <= 3) {
+        NewFieldErrors.cvc = '請輸入驗證碼'
+      }
+      setFieldErrors(NewFieldErrors)
     }
   }
 
@@ -123,6 +134,7 @@ const PaymentForm = (props) => {
         > */}
         {/* {({ isSubmitting }) => ( */}
         <div
+          ref={formRef}
           className="cartMain"
           id="PaymentForm"
           // onInvalid={handleInvalid}
@@ -143,13 +155,14 @@ const PaymentForm = (props) => {
           />
           <div
             className="cartInfoMenber "
+            ref={formRef}
             onSubmit={handleSubmit}
-            onInvalid={handleInvalid}
+            // onInvalid={handleInvalid}
             onChange={handleChange}
           >
             <label>卡號:</label>
-            {inputs.number.length < 16 && (
-              <small className="text-danger">請輸入信用卡號</small>
+            {fieldErrors.number && (
+              <small className="text-danger">{fieldErrors.number}</small>
             )}
             {/* <ErrorMessage name="number" style={{ color: 'red' }} /> */}
             <input
@@ -159,13 +172,14 @@ const PaymentForm = (props) => {
               onChange={handelChange}
               onClick={handleInputFocus}
               maxlength="16"
+              title="自訂訊息：格式錯誤"
               required
             />
             <br />
 
             <label>持卡人:</label>
-            {inputs.name.length < 1 && (
-              <small className="text-danger">請輸入持卡人姓名</small>
+            {fieldErrors.name && (
+              <small className="text-danger">{fieldErrors.name}</small>
             )}
             {/* <ErrorMessage name="name" /> */}
             <input
@@ -179,8 +193,8 @@ const PaymentForm = (props) => {
             <br />
             <label>有效日期:</label>
             {/* <ErrorMessage name="expiry" /> */}
-            {inputs.expiry.length < 4 && (
-              <small className="text-danger">請輸入有效日期</small>
+            {fieldErrors.expiry && (
+              <small className="text-danger">{fieldErrors.expiry}</small>
             )}
             <input
               type="tel"
@@ -194,8 +208,8 @@ const PaymentForm = (props) => {
             />
             <br />
             <label>驗證碼:</label>
-            {inputs.cvc.length < 3 && (
-              <small className="text-danger">請輸入驗證碼</small>
+            {fieldErrors.cvc && (
+              <small className="text-danger">{fieldErrors.cvc}</small>
             )}
             {/* <ErrorMessage name="cvc" /> */}
             <input
@@ -212,7 +226,7 @@ const PaymentForm = (props) => {
               <button onClick={() => setModalShow(false)}>取消</button>
               <button
                 // type="submit"
-
+                ref={formRef}
                 onClick={() => {
                   handleSubmit()
                 }}

@@ -34,6 +34,15 @@ function CartInfo(props) {
   const [township, setTownship] = useState(-1)
   const [pay, setPay] = useState(false)
 
+  const [countError, setCountError] = useState({
+    country: '',
+    township: '',
+    nNN: '',
+    nAA: '',
+    nCC: '',
+    nEE: '',
+  })
+
   // console.log(countries[country])
   // console.log(townships[country][township])
   // console.log(township)
@@ -113,6 +122,13 @@ function CartInfo(props) {
         history.push('/cartdetail', { cartId: data })
         Swal.fire('結帳成功!', '感謝您的購買!', 'success')
       }, 500)
+    } else {
+      const NewCountError = {}
+      if (country == -1 && township == -1) {
+        NewCountError.country = '請填寫收件人欄位'
+      }
+
+      setCountError(NewCountError)
     }
   }
   //處理每個欄位的變動
@@ -251,12 +267,10 @@ function CartInfo(props) {
             required
           />
           <br />
-          <label htmlFor="">
-            收件人地址:
-            {fieldErrors.nAA && (
-              <small className="text-danger form-text">{fieldErrors.nAA}</small>
-            )}
-          </label>
+          <label htmlFor="">收件人地址:</label>
+          {countError.country && (
+            <small className="text-danger">{countError.country}</small>
+          )}
           <br />
           <div>
             <select
@@ -276,9 +290,7 @@ function CartInfo(props) {
                 </option>
               ))}
             </select>
-            {fieldErrors.country && (
-              <small className="text-danger">請選擇</small>
-            )}
+
             <select
               name="township"
               value={township}
@@ -295,6 +307,7 @@ function CartInfo(props) {
                   </option>
                 ))}
             </select>
+
             <select
               disabled
               name=""
