@@ -10,8 +10,8 @@ import CartOrder from './pages/cart/CartOrder'
 //測試商品頁
 import ProductList from './pages/ProductList/ProductList'
 //組合用元件
-import MyNavbar from './components/MyNavbar'
-import MyFooter from './components/MyFooter'
+import NavBar from './components/NavBar.jsx'
+import Footer from './components/Footer'
 import MainContent from './components/MainContent'
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     <Router>
       <>
         {/* LOGO+標題+導覽列+上方選單 */}
-        <MyNavbar />
+        <NavBar />
         {/* 主內容區 */}
         <MainContent>
           <ScrollToTop>
@@ -42,7 +42,7 @@ function App() {
             </Switch>
           </ScrollToTop>
         </MainContent>
-        <MyFooter />
+        <Footer ver="full" />
       </>
     </Router>
   )

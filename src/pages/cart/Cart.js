@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import '../../styles/cart.scss'
+import { AiFillCaretRight } from 'react-icons/ai'
+import { useHistory } from 'react-router-dom'
 
-import CartTitle from './CartTitle'
+// import CartTitle from './CartTitle'
 import CartItemNav from './CartItemNav'
 import CartItem from './CartItem'
 import CartItemPlace from './CartItemPlace'
 import CartItemActivity from './CartItemActivity'
+import Swal from 'sweetalert2'
 //信用卡
-import PaymentForm from './PaymentForm'
+// import PaymentForm from './PaymentForm'
 import 'react-credit-cards/es/styles-compiled.css'
-
-import Register from './Register'
 
 const Cart = () => {
   //node 變更商品數量
@@ -69,13 +70,31 @@ const Cart = () => {
   // const [mycart, setMycart] = useState([])
   // const [dataLoading, setDataLoading] = useState(false)
   //商品變動
-
+  const history = useHistory()
   const [type, setType] = useState('product')
   const [total, setTotal] = useState(false)
   const [getSession, setGetSession] = useState([])
   const setSessionUp = useState([])[1]
   const setSessionDl = useState([])[1]
   const setSessionCl = useState([])[1]
+  //驗證會員有無登入
+  const [mid, setMid] = useState()
+
+  useEffect(() => {
+    setMid(sessionStorage.getItem('mid'))
+  }, [mid])
+
+  //驗證會員登錄
+  const handleMin = () => {
+    if (sessionStorage.getItem('mid') === null && getSession.length > 0)
+      setTimeout(() => {
+        sessionClear()
+        // setSubmitting(false)
+
+        history.push('/ProductList')
+        Swal.fire('未登入!', '請先登入', 'success')
+      }, 100)
+  }
 
   //node的接收商品
   const sessionServer = async () => {
@@ -125,11 +144,27 @@ const Cart = () => {
     }
     return total
   }
+  //設定title圖示
+  const [title, setTitle] = useState([true, false, false])
+  const handeleClass = (index) => {
+    // debugger
+    //先弄一個全暗的陣列
+    const newStatus = [false, false, false]
+    // 只點亮被按的按鈕
+    newStatus[index] = true
+    // 設定回狀態
+    setTitle(newStatus)
+  }
 
   // product acivity place
   const typeObj = {
     product: (
       <CartItem
+        handleMin={handleMin}
+        mid={mid}
+        handeleClass={handeleClass}
+        setTitle={setTitle}
+        title={title}
         pTotal={pTotal}
         sum={sum}
         total={total}
@@ -154,13 +189,36 @@ const Cart = () => {
 
   return (
     <>
-      <PaymentForm />
+      {/* <PaymentForm /> */}
       <div className="container ">
-        <CartTitle />
+        <div className="cartTitle ">
+          <div className="row ">
+            <div className={title[0] ? 'cartTitleH1-box' : 'cartTitleH1'}>
+              <h4>購物明細</h4>
+            </div>
+            <div>
+              <h2>
+                <AiFillCaretRight color="#808080" />
+                <AiFillCaretRight color="#808080" />
+                <AiFillCaretRight color="#808080" />
+              </h2>
+            </div>
+            <h4 className={title[1] ? 'cartTitleH1-box' : 'cartTitleH1'}>
+              訂單資訊
+            </h4>
+            <h2>
+              <AiFillCaretRight color="#808080" />
+              <AiFillCaretRight color="#808080" />
+              <AiFillCaretRight color="#808080" />
+            </h2>
+            <h4 className={title[2] ? 'cartTitleH1-box' : 'cartTitleH1'}>
+              訂單明細
+            </h4>
+          </div>
+        </div>
       </div>
       {!total && <CartItemNav setType={setType} type={type} />}
       {typeObj[type]}
-      <Register />
 
       {!total && (
         <>

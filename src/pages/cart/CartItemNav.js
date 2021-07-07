@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 
 const CartItemNav = (props) => {
-  const { setType, type } = props
+  const { setType } = props
   // 控制點亮css狀態用
   const [status, setStatus] = useState([true, false, false])
   const handeleClass = (index) => {

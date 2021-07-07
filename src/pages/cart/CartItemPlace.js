@@ -3,7 +3,7 @@ import { FaTrashAlt, FaMinus } from 'react-icons/fa'
 import { BiPlusMedical } from 'react-icons/bi'
 
 const CartItemPlace = (props) => {
-  const { total, setTotal } = props
+  const { setTotal } = props
   return (
     <>
       {/* －－－－－－－－－－－－－－－－－－－ */}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
-import CartTitle from './CartTitle'
+// import CartTitle from './CartTitle'
 import moment from 'moment'
+import { AiFillCaretRight } from 'react-icons/ai'
 
 // import CartItem from './CartItem'
 
@@ -18,7 +19,27 @@ const CartDetail = () => {
   return (
     <>
       <div className="container">
-        <CartTitle />
+        <div className="cartTitle ">
+          <div className="row ">
+            <div className="cartTitleH1">
+              <h4>購物明細</h4>
+            </div>
+            <div>
+              <h2>
+                <AiFillCaretRight color="#808080" />
+                <AiFillCaretRight color="#808080" />
+                <AiFillCaretRight color="#808080" />
+              </h2>
+            </div>
+            <h4 className="cartTitleH1">訂單資訊</h4>
+            <h2>
+              <AiFillCaretRight color="#808080" />
+              <AiFillCaretRight color="#808080" />
+              <AiFillCaretRight color="#808080" />
+            </h2>
+            <h4 className="cartTitleH1-box">訂單明細</h4>
+          </div>
+        </div>
       </div>
       <div className="CartDetailText">
         <h4>
@@ -88,7 +109,7 @@ const CartDetail = () => {
             <li>{cartId.orderInfo.cartOrderId}</li>
             <li>{moment(cartId.orderInfo.created_at).format('YYYY-MM-DD')}</li>
             <li>{cartId.orderInfo.cartStatus}</li>
-            <li>{cartId.orderInfo.cartLogisticsId}</li>
+            <li>{cartId.orderInfo.cartLogisticsId && '宅配'}</li>
             <li>{cartId.orderInfo.nNN}</li>
             <li>{cartId.orderInfo.nCC}</li>
             <li>{cartId.orderInfo.nEE}</li>
@@ -110,7 +131,7 @@ const CartDetail = () => {
             <li>{cartId.orderInfo.nCC}</li>
             <li>{cartId.orderInfo.nEE}</li>
             <li>{cartId.orderInfo.nAA}</li>
-            <li>{cartId.orderInfo.cartPayId}</li>
+            <li>{cartId.orderInfo.cartPayId && '信用卡結帳'}</li>
             <li>已付清</li>
           </ul>
         </div>

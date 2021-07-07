@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
 import { countries, townships, postcodes } from '../../json/townships'
+// import { ImCreditCard } from 'react-icons/im'
 //reactBootstrap用
-import CartModalForm from './CartModalForm'
-import { Button } from 'react-bootstrap'
+import PaymentForm from './PaymentForm'
+// import { Button } from 'react-bootstrap'
+import Swal from 'sweetalert2'
 
 // import { withFormik, Form, Field, ErrorMessage } from 'formik'
 // import * as yup from 'yup'
@@ -21,22 +23,29 @@ const errMsg = {
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
+  // console.log(countries, townships, postcodes)
   //reactBootstrap用
   const [modalShow, setModalShow] = React.useState(false)
   const history = useHistory()
-  const { setTotal, getSession, sessionClear, pTotal, sum } = props
+  const { setTotal, getSession, sessionClear, pTotal, sum, handeleClass, mid } =
+    props
   //記錄陣列的索引值,預設值是-1,相當於'請選擇xxx'
   const [country, setCountry] = useState(-1)
   const [township, setTownship] = useState(-1)
+  const [pay, setPay] = useState(false)
+
+  // console.log(countries[country])
+  // console.log(townships[country][township])
+  // console.log(township)
 
   const [inputs, setInputs] = useState({
     nNN: '',
-    nAA: '台北市大安區大安路一段',
+    nAA: '大安路一段',
     nCC: '0919999999',
     nEE: 'eaag@gmail.com',
     cartPayId: '1',
     cartLogisticsId: '1',
-    mid: '1',
+    mid: mid,
     cartTotal: sum(getSession) - 1130 + pTotal(getSession) * 100,
     cartDescription: '1',
     cartStatus: '待出貨',
@@ -46,56 +55,65 @@ function CartInfo(props) {
   //寫入訂單
   async function addCartToSever(e) {
     e.preventDefault()
-    const orderid = +new Date()
-    let data = {
-      orderItem: [],
-    }
-    for (let item of getSession) {
-      const tempObj = {
-        product_id: item.product_id,
-        cartName: item.product_name,
-        cartBuyQty: item.quantity,
-        cartBuyP: item.product_price,
-        cartOrderId: orderid,
+
+    //對地址做表單驗證
+    if (country >= 0 && township >= 0) {
+      const orderid = +new Date()
+      let data = {
+        orderItem: [],
       }
-      data.orderItem.push(tempObj)
-    }
-    data.orderInfo = {
-      nNN: inputs.nNN,
-      nAA: inputs.nAA,
-      nCC: inputs.nCC,
-      nEE: inputs.nEE,
-      cartPayId: inputs.cartPayId,
-      cartLogisticsId: inputs.cartLogisticsId,
-      mid: inputs.mid,
-      cartTotal: inputs.cartTotal,
-      cartDescription: inputs.cartDescription,
-      cartStatus: inputs.cartStatus,
-      cartOrderId: orderid,
-      orderclass: inputs.orderclass,
-      created_at: new Date(),
-    }
-    console.log('一開始收到的資料', data)
-    //寫入的網址
-    const url = 'http://localhost:4000/cartorder/add/'
+      for (let item of getSession) {
+        const tempObj = {
+          product_id: item.product_id,
+          cartName: item.product_name,
+          cartBuyQty: item.quantity,
+          cartBuyP: item.product_price,
+          cartOrderId: orderid,
+        }
+        data.orderItem.push(tempObj)
+      }
+      data.orderInfo = {
+        nNN: inputs.nNN,
+        nAA: countries[country] + townships[country][township] + inputs.nAA,
+        nCC: inputs.nCC,
+        nEE: inputs.nEE,
+        cartPayId: inputs.cartPayId,
+        cartLogisticsId: inputs.cartLogisticsId,
+        mid: inputs.mid,
+        cartTotal: inputs.cartTotal,
+        cartDescription: inputs.cartDescription,
+        cartStatus: inputs.cartStatus,
+        cartOrderId: orderid,
+        orderclass: inputs.orderclass,
+        created_at: new Date(),
+      }
+      console.log('一開始收到的資料', data)
+      //寫入的網址
+      const url = 'http://localhost:4000/cartorder/add/'
 
-    const request = new Request(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: new Headers({
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }),
-    })
-    console.log('JSON字串', JSON.stringify(data))
-    const response = await fetch(request)
-    const dataRes = await response.json()
+      const request = new Request(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+      })
+      console.log('JSON字串', JSON.stringify(data))
+      const response = await fetch(request)
+      const dataRes = await response.json()
 
-    console.log('伺服器回傳的json資料', dataRes)
-    //送出資料後清除session
-    sessionClear()
-    // 送出資料後跳轉頁面
-    history.push('/cartdetail', { cartId: data })
+      console.log('伺服器回傳的json資料', dataRes)
+      //送出資料後清除session
+      // 送出資料後跳轉頁面
+      setTimeout(() => {
+        sessionClear()
+        // setSubmitting(false)
+
+        history.push('/cartdetail', { cartId: data })
+        Swal.fire('結帳成功!', '感謝您的購買!', 'success')
+      }, 500)
+    }
   }
   //處理每個欄位的變動
   const handelChange = (e) => {
@@ -111,6 +129,7 @@ function CartInfo(props) {
     nAA: '',
     nCC: '',
     nEE: '',
+    country: '',
   })
   //form有更動會觸發這個函式
   const handleChangeInput = (e) => {
@@ -140,6 +159,7 @@ function CartInfo(props) {
       setModalShow(false)
     }
   }
+
   return (
     <>
       {/* <div className="container">
@@ -165,6 +185,7 @@ function CartInfo(props) {
           onChange={handleChangeInput}
           onInvalid={handleInvalid}
         >
+          <br />
           <label htmlFor="">訂購人姓名:</label>
           {/* <br /> */}
           <input type="text" disabled />
@@ -196,14 +217,12 @@ function CartInfo(props) {
             required
           />
           <br />
-
           <label>
             收件人手機:
             {fieldErrors.nCC && (
               <small className="text-danger "> {fieldErrors.nCC}</small>
             )}
           </label>
-
           <br />
           <input
             type="text"
@@ -215,7 +234,6 @@ function CartInfo(props) {
             maxlength="10"
             required
           />
-
           <br />
           <label htmlFor="">
             收件人信箱:
@@ -223,7 +241,6 @@ function CartInfo(props) {
               <small className="text-danger ">{fieldErrors.nEE}</small>
             )}
           </label>
-
           <br />
           <input
             type="email"
@@ -233,7 +250,6 @@ function CartInfo(props) {
             placeholder="請輸入信箱"
             required
           />
-
           <br />
           <label htmlFor="">
             收件人地址:
@@ -244,6 +260,7 @@ function CartInfo(props) {
           <br />
           <div>
             <select
+              name="country"
               value={country}
               onChange={(e) => {
                 // 將字串轉成數字
@@ -259,7 +276,11 @@ function CartInfo(props) {
                 </option>
               ))}
             </select>
+            {fieldErrors.country && (
+              <small className="text-danger">請選擇</small>
+            )}
             <select
+              name="township"
               value={township}
               onChange={(e) => {
                 // 將字串轉成數字
@@ -275,6 +296,7 @@ function CartInfo(props) {
                 ))}
             </select>
             <select
+              disabled
               name=""
               id=""
               value={country > -1 && township > -1 && postcodes[township]}
@@ -299,8 +321,11 @@ function CartInfo(props) {
           <select name="" id="">
             <option value="">捐贈發票</option>
           </select>
-          <h5>3.付款方式</h5>
+          <br />
+          <br />
+          {/* <h5>3.付款方式</h5> */}
           <label htmlFor="">選擇付款方式:</label>
+          <br />
           <select
             name=""
             id=""
@@ -311,54 +336,27 @@ function CartInfo(props) {
             <option value="1">貨到付款</option>
             <option value="2">信用卡支付</option>
           </select>
-          <div>
-            <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
-          </div>
-          <label htmlFor="">卡號:</label>
-          <input type="text" placeholder="卡號" name="cardNum" />
           <br />
-          <label htmlFor="">持卡人:</label>
-          <input type="text" placeholder="持卡人姓名" name="cardName" />
-          <br />
-          <label htmlFor="">有效日期:</label>
-          <br />
-          <input
-            type="text"
-            style={{ width: '180px' }}
-            placeholder="MM/YY"
-            name="cardDate"
-          />
-
-          <br />
-          <label htmlFor="">驗證碼:</label>
-          <br />
-          <input
-            type="text"
-            style={{ width: '180px' }}
-            placeholder="XXX"
-            name="cardCheck"
-          />
-          <br />
-          <button
-            onClick={() => {
-              setModalShow(true)
-            }}
-          ></button>
           <>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-              填入信用卡
-            </Button>
-
-            <CartModalForm
+            <PaymentForm
               show={modalShow}
               onHide={() => setModalShow(false)}
               setModalShow={setModalShow}
+              setPay={setPay}
             />
+            {pay && (
+              <div className="cartPayImg">
+                <img src="./img/pay2.png" alt="" style={{ width: '300px' }} />
+                {/* <ImCreditCard /> */}
+                {/* <h3>信用卡已認證成功</h3> */}
+              </div>
+            )}
           </>
           <div className="cartPiceBtn cartInfoBtn">
             <button
               onClick={() => {
                 setTotal(false)
+                handeleClass(0)
               }}
             >
               上一頁
@@ -367,6 +365,7 @@ function CartInfo(props) {
             <button
               type="submit"
               onSubmit={() => addCartToSever()}
+
               // disabled={isSubmitting}
             >
               確認結帳

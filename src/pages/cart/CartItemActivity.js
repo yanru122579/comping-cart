@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FaTrashAlt, FaMinus } from 'react-icons/fa'
 import { BiPlusMedical } from 'react-icons/bi'
 

@@ -253,6 +253,7 @@ p {
     border: none;
   }
   .cartInfoBtn {
+    margin-top: 100px;
     width: 100%;
     // background-color: #fff;
     text-align: left;
@@ -353,5 +354,16 @@ p {
   .item4 {
     width: 30%;
     padding: 20px 0;
+  }
+}
+.cartPayBtn {
+  button {
+    width: 171px;
+    height: 50px;
+    border-radius: 12px;
+    background-color: #ffbb00;
+    border: none;
+    color: #fff;
+    font-size: 20px;
   }
 }

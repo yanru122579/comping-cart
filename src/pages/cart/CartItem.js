@@ -6,6 +6,7 @@ import CartInfo from './CartInfo'
 
 const CartItem = (props) => {
   const {
+    mid,
     pTotal,
     sum,
     total,
@@ -14,6 +15,8 @@ const CartItem = (props) => {
     sessionUpdate,
     sessionDelete,
     sessionClear,
+    handeleClass,
+    handleMin,
   } = props
   const history = useHistory()
   // const [price, setPrice] = useState()
@@ -133,7 +136,9 @@ const CartItem = (props) => {
             <button>繼續選購</button>
             <button
               onClick={() => {
+                handleMin()
                 getSession.length && setTotal(true)
+                getSession.length && handeleClass(1)
               }}
             >
               下一步
@@ -143,6 +148,8 @@ const CartItem = (props) => {
       )}
       {total && (
         <CartInfo
+          mid={mid}
+          handeleClass={handeleClass}
           pTotal={pTotal}
           sum={sum}
           total={total}

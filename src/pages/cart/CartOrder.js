@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { FaSearch } from 'react-icons/fa'
 // import CartItem from './CartItem'
 import CartOrderItem from './CartOrderItem'
+import { Pagination } from 'react-bootstrap'
 
 const CartOrder = () => {
   const [data, setData] = useState([])
@@ -12,15 +13,14 @@ const CartOrder = () => {
   const [page, setPage] = useState('')
   const [orderClass, setOrderClass] = useState('')
 
-  // const [test, setTest] = useState('')
-
+  console.log('paggg', data.totalPages)
   //資料載入
 
   const addUserToSever = async () => {
     // 開啟載入指示
     // setDataLoading(true)
 
-    const newData = {}
+    // const newData = {}
 
     // 連接的伺服器資料網址
     let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}`
@@ -35,7 +35,7 @@ const CartOrder = () => {
     })
     const response = await fetch(request)
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     setData(data)
     // console.log('伺服器回傳的json資料', data.rows)
     // 要等驗証過，再設定資料(簡單的直接設定)
@@ -60,7 +60,7 @@ const CartOrder = () => {
     })
     const response = await fetch(request)
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     setDataItem(data)
   }
 
@@ -85,6 +85,41 @@ const CartOrder = () => {
     addUserToSever()
   }, [])
 
+  //判斷頁數
+  // const totalPages = () => {
+  //   let p = document.getElementById('pages').innerHTML
+  //   for (let i = 0; i < data.totalPages; i++) {
+  //     p += `<li className="page-item">
+  //         <button
+  //           className="page-link"
+  //           value={i}
+  //           onClick={() => {
+  //             setPage(i + 1)
+  //           }}
+  //         >
+  //           ${i + 1}
+  //         </button>
+  //       </li>`
+  //   }
+  // }
+  // console.log('page', data.totoPages)
+
+  // let active = 2
+  let items = []
+  for (let number = 1; number <= data.totalPages; number++) {
+    items.push(
+      <Pagination.Item
+        key={number}
+        onClick={(e) => {
+          setPage(number)
+        }}
+        active={number === page}
+      >
+        {number}
+      </Pagination.Item>
+    )
+  }
+
   return (
     <>
       <div className="container">
@@ -102,8 +137,8 @@ const CartOrder = () => {
           >
             <option value="">全部</option>
             <option value="1">商品租借</option>
-            <option value="2">場地租借</option>
-            <option value="3">活動預約</option>
+            <option value="2">活動預約</option>
+            <option value="3">場地租借</option>
           </select>
         </div>
         <table className="cartOrderItemHeard">
@@ -136,14 +171,21 @@ const CartOrder = () => {
             <li class="page-item">
               <button
                 class="page-link"
+                id="prev"
                 onClick={() => {
-                  setPage(page + 1)
+                  if (page == 1) return
+                  setPage(page - 1)
                 }}
               >
                 Previous
               </button>
             </li>
-            {data?.rows?.map((item, i) => {
+            {/* {totalPages()} */}
+            <div>
+              <Pagination>{items}</Pagination>
+              <br />
+            </div>
+            {/* {data?.rows.map((item, i) => {
               return (
                 <li className="page-item">
                   <button
@@ -153,17 +195,18 @@ const CartOrder = () => {
                       setPage(i + 1)
                     }}
                   >
-                    {i + 1}
+                    {item.totalPages}
                   </button>
                 </li>
               )
-            })}
+            })} */}
             <li class="page-item">
               <button
                 class="page-link"
                 href=""
                 onClick={() => {
-                  setPage(page - 1)
+                  if (page === data.totalPages) return
+                  setPage(page + 1)
                 }}
               >
                 Next

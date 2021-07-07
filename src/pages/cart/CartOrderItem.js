@@ -23,6 +23,35 @@ const CartOrderItem = (props) => {
     return str
   }
 
+  const product = (v) => {
+    if (item.orderclass == 1) {
+      return (
+        <>
+          <td>{v.cartName}</td>
+          <td>{v.cartBuyP}</td>
+          <td>{v.cartBuyQty}</td>
+        </>
+      )
+    } else if (item.orderclass == 2) {
+      return (
+        <>
+          <td>{v.cartName}</td>
+          <td>{v.cartBuyP}</td>
+          <td>{v.cartBuyQty}</td>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <td>{v.cpAreaId}</td>
+          <td>{v.cpArea}</td>
+          <td>{v.cpQty}</td>
+        </>
+      )
+    }
+  }
+  console.log(item.orderclass)
+
   return (
     <>
       <table className="cartOrderItemHeard">
@@ -77,9 +106,7 @@ const CartOrderItem = (props) => {
                               alt=""
                             />
                           </td>
-                          <td>{v.cartName}</td>
-                          <td>{v.cartBuyP}</td>
-                          <td>{v.cartBuyQty}</td>
+                          {product(v)}
                         </tr>
                       </tbody>
                     )
