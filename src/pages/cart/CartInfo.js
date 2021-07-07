@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
 import { countries, townships, postcodes } from '../../json/townships'
@@ -42,6 +42,13 @@ function CartInfo(props) {
     nCC: '',
     nEE: '',
   })
+  //定義foucs
+  const [errorMsg, setErrorMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
+  const nNNRef = useRef()
+  const nCCRef = useRef()
+  const nEERef = useRef()
+  const nAARef = useRef()
 
   // console.log(countries[country])
   // console.log(townships[country][township])
@@ -161,6 +168,62 @@ function CartInfo(props) {
   const handleInvalid = (e) => {
     e.preventDefault()
 
+    const fields = [
+      {
+        name: 'nAA',
+        value: inputs.nAA,
+        message: '請輸入地址',
+      },
+      { name: 'nEE', value: inputs.nEE, message: '請輸入信箱' },
+      { name: 'nCC', value: inputs.nCC, message: '請輸入電話' },
+      {
+        name: 'nNN',
+        value: inputs.nNN,
+        message: '請輸入文字',
+      },
+    ]
+    const isNotFilled = fields.forEach((field) => {
+      if (!field.value.trim()) {
+        setErrorMsg(field.message)
+
+        // switch (field.name) {
+        //   case 'nEE':
+        //     nEERef.current.focus()
+        //     break
+        //   case 'nCC':
+        //     nCCRef.current.focus()
+        //     break
+        //   case 'nAA':
+        //     nAARef.current.focus()
+        //     break
+        //   case 'nNN':
+        //     nNNRef.current.focus()
+        //     break
+        //   default:
+        //     break
+        // }
+        if (field.name === 'nNN') {
+          nNNRef.current.focus()
+          return
+        }
+        if (field.name === 'nAA') {
+          nAARef.current.focus()
+          return
+        }
+        if (field.name === 'nCC') {
+          nCCRef.current.focus()
+          return
+        }
+        if (field.name === 'nEE') {
+          nEERef.current.focus()
+          return
+        }
+      }
+      setErrorMsg('')
+      return false
+    })
+    // return isNotFilled
+
     const updatedFieldErrors = {
       ...fieldErrors,
       [e.target.name]: e.target.validationMessage,
@@ -227,6 +290,7 @@ function CartInfo(props) {
           <input
             type="text"
             name="nNN"
+            ref={nNNRef}
             value={inputs.nNN}
             onChange={handelChange}
             placeholder="請輸入收件人姓名"
@@ -243,6 +307,7 @@ function CartInfo(props) {
           <input
             type="text"
             name="nCC"
+            ref={nCCRef}
             value={inputs.nCC}
             onChange={handelChange}
             placeholder="請輸入手機"
@@ -261,6 +326,7 @@ function CartInfo(props) {
           <input
             type="email"
             name="nEE"
+            ref={nEERef}
             value={inputs.nEE}
             onChange={handelChange}
             placeholder="請輸入信箱"
@@ -270,6 +336,9 @@ function CartInfo(props) {
           <label htmlFor="">收件人地址:</label>
           {countError.country && (
             <small className="text-danger">{countError.country}</small>
+          )}
+          {fieldErrors.nAA && (
+            <small className="text-danger ">{fieldErrors.nAA}</small>
           )}
           <br />
           <div>
@@ -324,6 +393,7 @@ function CartInfo(props) {
           <input
             type="text"
             name="nAA"
+            ref={nAARef}
             value={inputs.nAA}
             onChange={handelChange}
             placeholder="請輸入地址"
