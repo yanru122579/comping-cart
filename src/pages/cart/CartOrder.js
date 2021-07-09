@@ -12,6 +12,8 @@ const CartOrder = () => {
   const [dataItem, setDataItem] = useState([])
   const [page, setPage] = useState('')
   const [orderClass, setOrderClass] = useState('')
+  //篩選有沒有出貨
+  const [cartStatus, setCartStatus] = useState('')
 
   console.log('paggg', data.totalPages)
   //資料載入
@@ -131,6 +133,12 @@ const CartOrder = () => {
               <FaSearch />
               查詢訂單
             </h5>
+            <select name="" id="">
+              <option value="-1">訂單狀態</option>
+              <option value="已完成">已完成</option>
+              <option value="待出貨">待出貨</option>
+              <option value="已取消">已取消</option>
+            </select>
             <select
               name=""
               id=""

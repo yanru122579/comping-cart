@@ -23,10 +23,10 @@ const CartHover123 = () => {
     loadingRef.current = false
     setGetSession(data)
   }
-  console.log('hove', getSession)
-  useEffect(() => {
-    sessionServer()
-  }, [getSession])
+  // console.log('hove', getSession)
+  // useEffect(() => {
+  //   sessionServer()
+  // }, [getSession])
   return (
     <>
       {!loadingRef.current && (
