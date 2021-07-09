@@ -65,37 +65,37 @@ const CartCheckOrder = () => {
     <>
       {!loadingRef.current && (
         <>
-          <div class="containerPretty ">
-            <div class="container">
+          <div className="containerPretty ">
+            <div className="container">
               <h2>
                 訂單點交系統 <small>請確認商品無誤</small>
               </h2>
-              <ul class="responsive-table">
-                <li class="table-header">
-                  <div class="col col-3">訂單編號</div>
-                  <div class="col col-3">訂單日期</div>
-                  <div class="col col-2">訂單狀態</div>
-                  <div class="col col-2">付款方式</div>
-                  <div class="col col-2">付款金額</div>
+              <ul className="responsive-table">
+                <li className="table-header">
+                  <div className="col col-3">訂單編號</div>
+                  <div className="col col-3">訂單日期</div>
+                  <div className="col col-2">訂單狀態</div>
+                  <div className="col col-2">付款方式</div>
+                  <div className="col col-2">付款金額</div>
                 </li>
-                <li class="table-row">
-                  <div class="col col-3" data-label="Job Id">
+                <li className="table-row">
+                  <div className="col col-3" data-label="Job Id">
                     1625747009517
                     {/* {orderCheck[0]?.cartOrderId} */}
                   </div>
-                  <div class="col col-3" data-label="Customer Name">
+                  <div className="col col-3" data-label="Customer Name">
                     {/* {moment(orderCheck[0]?.created_at).format('YYYY-MM-DD')} */}
                     2021-07-08
                   </div>
-                  <div class="col col-2" data-label="Amount">
+                  <div className="col col-2" data-label="Amount">
                     {/* {orderCheck[0]?.cartStatus} */}
                     已取消
                   </div>
-                  <div class="col col-2" data-label="Payment Status">
+                  <div className="col col-2" data-label="Payment Status">
                     {/* {orderCheck[0]?.cartPayName} */}
                     APPLE PAY
                   </div>
-                  <div class="col col-2" data-label="Payment Status">
+                  <div className="col col-2" data-label="Payment Status">
                     {/* {orderCheck[0]?.cartTotal} */}
                     2470
                   </div>

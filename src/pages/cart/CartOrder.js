@@ -122,7 +122,97 @@ const CartOrder = () => {
 
   return (
     <>
-      <div className="container">
+      {/* 新訂單開始 */}
+
+      <div className="containerPretty ">
+        <div className="container">
+          <div className="cartOrderTitle">
+            <h5>
+              <FaSearch />
+              查詢訂單
+            </h5>
+            <select
+              name=""
+              id=""
+              onChange={(v) => {
+                setOrderClass(v.target.value)
+              }}
+            >
+              <option value="">全部</option>
+              <option value="1">商品租借</option>
+              <option value="2">活動預約</option>
+              <option value="3">場地租借</option>
+            </select>
+          </div>
+
+          <ul className="responsive-table">
+            <li className="table-header">
+              <div className="col col-2">訂單編號</div>
+              <div className="col col-2">訂單日期</div>
+              <div className="col col-2">訂單狀態</div>
+              <div className="col col-2">付款方式</div>
+              <div className="col col-2">付款金額</div>
+              <div className="col col-1">分類</div>
+              <div className="col col-1">更多</div>
+            </li>
+          </ul>
+          {data?.rows?.map((item, i) => {
+            return (
+              <CartOrderItem
+                key={i}
+                item={item}
+                select={select}
+                setSelect={setSelect}
+                dataItem={dataItem}
+              />
+            )
+          })}
+          <ul>
+            <nav aria-label="Page navigation example">
+              <ul className="pagination">
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    id="prev"
+                    onClick={() => {
+                      if (page == 1) return
+                      setPage(page - 1)
+                    }}
+                  >
+                    Previous
+                  </button>
+                </li>
+
+                <div>
+                  <Pagination>{items}</Pagination>
+                  <br />
+                </div>
+
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    href=""
+                    onClick={() => {
+                      if (page === data.totalPages) return
+                      setPage(page + 1)
+                    }}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </ul>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default CartOrder
+
+{
+  /* <div className="container">
         <div className="cartOrderTitle">
           <h5>
             <FaSearch />
@@ -167,10 +257,10 @@ const CartOrder = () => {
         })}
 
         <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item">
+          <ul className="pagination">
+            <li className="page-item">
               <button
-                class="page-link"
+                className="page-link"
                 id="prev"
                 onClick={() => {
                   if (page == 1) return
@@ -180,29 +270,15 @@ const CartOrder = () => {
                 Previous
               </button>
             </li>
-            {/* {totalPages()} */}
+
             <div>
               <Pagination>{items}</Pagination>
               <br />
             </div>
-            {/* {data?.rows.map((item, i) => {
-              return (
-                <li className="page-item">
-                  <button
-                    className="page-link"
-                    value={i}
-                    onClick={() => {
-                      setPage(i + 1)
-                    }}
-                  >
-                    {item.totalPages}
-                  </button>
-                </li>
-              )
-            })} */}
-            <li class="page-item">
+
+            <li className="page-item">
               <button
-                class="page-link"
+                className="page-link"
                 href=""
                 onClick={() => {
                   if (page === data.totalPages) return
@@ -214,9 +290,5 @@ const CartOrder = () => {
             </li>
           </ul>
         </nav>
-      </div>
-    </>
-  )
+      </div> */
 }
-
-export default CartOrder
