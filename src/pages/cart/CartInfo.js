@@ -23,6 +23,7 @@ const errMsg = {
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
+  const { cartLogistics } = props
   // console.log(countries, townships, postcodes)
   //reactBootstrap用
   const [modalShow, setModalShow] = React.useState(false)
@@ -60,7 +61,7 @@ function CartInfo(props) {
     nCC: '0919999999',
     nEE: 'eaag@gmail.com',
     cartPayId: '1',
-    cartLogisticsId: '1',
+    cartLogisticsId: cartLogistics,
     mid: mid,
     cartTotal: sum(getSession) - 1130 + pTotal(getSession) * 100,
     cartDescription: '1',

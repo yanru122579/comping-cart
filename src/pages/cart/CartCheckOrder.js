@@ -29,16 +29,13 @@ const CartCheckOrder = () => {
     })
     const response = await fetch(request)
     const data = await response.json()
-    console.log(data)
+
     loadingRef.current = false
     setOrderCheck(data)
   }
   useEffect(() => {
     checkOrderServer()
   }, [])
-  useEffect(() => {
-    orderEdit()
-  }, [number])
 
   //修改訂單
   async function orderEdit(e) {
@@ -61,6 +58,9 @@ const CartCheckOrder = () => {
     const dataRes = await response.json()
     console.log('伺服器回傳的json資料', dataRes)
   }
+  useEffect(() => {
+    orderEdit()
+  }, [number])
   return (
     <>
       {!loadingRef.current && (
@@ -80,24 +80,24 @@ const CartCheckOrder = () => {
                 </li>
                 <li className="table-row">
                   <div className="col col-3" data-label="Job Id">
-                    1625747009517
-                    {/* {orderCheck[0]?.cartOrderId} */}
+                    {/* 1625747009517 */}
+                    {orderCheck[0]?.cartOrderId}
                   </div>
                   <div className="col col-3" data-label="Customer Name">
-                    {/* {moment(orderCheck[0]?.created_at).format('YYYY-MM-DD')} */}
-                    2021-07-08
+                    {moment(orderCheck[0]?.created_at).format('YYYY-MM-DD')}
+                    {/* 2021-07-08 */}
                   </div>
                   <div className="col col-2" data-label="Amount">
-                    {/* {orderCheck[0]?.cartStatus} */}
-                    已取消
+                    {orderCheck[0]?.cartStatus}
+                    {/* 已取消 */}
                   </div>
                   <div className="col col-2" data-label="Payment Status">
-                    {/* {orderCheck[0]?.cartPayName} */}
-                    APPLE PAY
+                    {orderCheck[0]?.cartPayName}
+                    {/* APPLE PAY */}
                   </div>
                   <div className="col col-2" data-label="Payment Status">
-                    {/* {orderCheck[0]?.cartTotal} */}
-                    2470
+                    {orderCheck[0]?.cartTotal}
+                    {/* 2470 */}
                   </div>
                 </li>
               </ul>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaTrashAlt, FaMinus } from 'react-icons/fa'
 import { BiPlusMedical } from 'react-icons/bi'
 import { useHistory } from 'react-router-dom'
@@ -18,6 +18,8 @@ const CartItem = (props) => {
     handeleClass,
     handleMin,
   } = props
+  const [cartLogistics, setCartLogistics] = useState()
+
   const history = useHistory()
   // const [price, setPrice] = useState()
   return (
@@ -93,6 +95,7 @@ const CartItem = (props) => {
             <div className="container">
               <h3>目前購物車內尚無東西</h3>
               <button
+                className="cartItemBtn"
                 onClick={() => {
                   history.push('/productlist')
                 }}
@@ -120,7 +123,20 @@ const CartItem = (props) => {
                   <option value="">請選擇折價券</option>
                 </select>
               </p>
-              <p>選擇運送方式: 100/件</p>
+              <p>
+                選擇運送方式:
+                <select
+                  name="cartLogistics"
+                  id=""
+                  value={cartLogistics}
+                  style={{ width: '150px' }}
+                  onChange={(e) => setCartLogistics(e.target.value)}
+                >
+                  <option value="-1">請選擇折價券</option>
+                  <option value="1">宅配1件/100</option>
+                  <option value="2">自取</option>
+                </select>
+              </p>
               <h4>總計金額:&emsp;</h4>
             </div>
             <div className="cartPiceDetilItem2">
@@ -156,6 +172,7 @@ const CartItem = (props) => {
           setTotal={setTotal}
           getSession={getSession}
           sessionClear={sessionClear}
+          cartLogistics={cartLogistics}
         />
       )}
     </>

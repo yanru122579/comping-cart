@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 
 const CartItemNav = (props) => {
-  const { setType } = props
+  const { setType, getSession } = props
   // 控制點亮css狀態用
   const [status, setStatus] = useState([true, false, false])
   const handeleClass = (index) => {
@@ -15,11 +15,12 @@ const CartItemNav = (props) => {
     setStatus(newStatus)
   }
 
+  console.log('hi', getSession)
   return (
     <>
       <div className="cartNavItem">
         <button
-          className={`navClass ${
+          className={`navClass nav ${
             status[0] ? 'cartNavItemBoxBk' : 'cartNavItemBoxGy'
           }`}
           onClick={() => {
@@ -28,10 +29,13 @@ const CartItemNav = (props) => {
           }}
         >
           商品租借
+          {getSession.length > 0 && (
+            <div class="nav-counter nav-counter-blue">{getSession.length}</div>
+          )}
         </button>
 
         <button
-          className={`navClass ${
+          className={`navClass nav ${
             status[1] ? 'cartNavItemBoxBk' : 'cartNavItemBoxGy'
           }`}
           onClick={() => {
@@ -40,10 +44,13 @@ const CartItemNav = (props) => {
           }}
         >
           活動預約
+          {getSession.length > 0 && (
+            <div class="nav-counter nav-counter-blue">{getSession.length}</div>
+          )}
         </button>
 
         <button
-          className={`navClass ${
+          className={`navClass nav ${
             status[2] ? 'cartNavItemBoxBk' : 'cartNavItemBoxGy'
           }`}
           onClick={() => {
@@ -52,6 +59,9 @@ const CartItemNav = (props) => {
           }}
         >
           場地租借
+          {getSession.length > 0 && (
+            <div class="nav-counter nav-counter-blue">{getSession.length}</div>
+          )}
         </button>
       </div>
     </>

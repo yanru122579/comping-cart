@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import './App.css'
@@ -12,10 +12,11 @@ import CartCheckOrder from './pages/cart/CartCheckOrder'
 //測試商品頁
 import ProductList from './pages/ProductList/ProductList'
 //組合用元件
-import NavBar from './components/NavBar.jsx'
+import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import MainContent from './components/MainContent'
 
+//購物車狀態使用
 function App() {
   return (
     <Router>

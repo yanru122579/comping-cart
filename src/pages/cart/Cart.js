@@ -9,11 +9,14 @@ import CartItem from './CartItem'
 import CartItemPlace from './CartItemPlace'
 import CartItemActivity from './CartItemActivity'
 import Swal from 'sweetalert2'
+//hover的顯示頁
+import CartHover from './CartHover'
 //信用卡
 // import PaymentForm from './PaymentForm'
 import 'react-credit-cards/es/styles-compiled.css'
 
-const Cart = () => {
+const Cart = (props) => {
+  // const { getSession, setGetSession } = props
   //node 變更商品數量
   const sessionUpdate = async (sid, quantity) => {
     const url = `http://localhost:4000/cart/update?sid=${sid}&quantity=${quantity}`
@@ -77,6 +80,8 @@ const Cart = () => {
   const setSessionUp = useState([])[1]
   const setSessionDl = useState([])[1]
   const setSessionCl = useState([])[1]
+  //vover滑動用
+
   //驗證會員有無登入
   const [mid, setMid] = useState()
 
@@ -200,6 +205,14 @@ const Cart = () => {
 
   return (
     <>
+      {/* <div className="hovertest1">
+        123
+        <p class="hovertest">
+          測試觸碰滑動
+          <CartHover getSession={getSession} />
+        </p>
+      </div> */}
+
       {/* <PaymentForm /> */}
       <div className="container ">
         <div className="cartTitle ">
@@ -228,9 +241,10 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      {!total && <CartItemNav setType={setType} type={type} />}
+      {!total && (
+        <CartItemNav setType={setType} type={type} getSession={getSession} />
+      )}
       {typeObj[type]}
-
       {!total && (
         <>
           <div className="cartCards">

@@ -176,7 +176,7 @@ const CartDetail = () => {
             <li>{cartId.orderInfo.cartOrderId}</li>
             <li>{moment(cartId.orderInfo.created_at).format('YYYY-MM-DD')}</li>
             <li>{cartId.orderInfo.cartStatus}</li>
-            <li>{cartId.orderInfo.cartLogisticsId && '宅配'}</li>
+            <li>{cartId.orderInfo.cartLogisticsId === 1 ? '宅配' : '自取'}</li>
             <li>{cartId.orderInfo.nNN}</li>
             <li>{cartId.orderInfo.nCC}</li>
             <li>{cartId.orderInfo.nEE}</li>

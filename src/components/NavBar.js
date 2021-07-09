@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import MainLogo from '../images/logo.svg' //logo檔案
 import Profile from '../images/profile.png' //profile檔案
 import { Navbar, Nav, Image } from 'react-bootstrap'
@@ -7,6 +7,8 @@ import '../styles/navnfooter.css'
 import NavIcon from './NavIcon.js' //icon SVG路徑檔案
 import { Link } from 'react-router-dom'
 
+//購物車下拉用
+import CartHover123 from './CartHover123'
 //
 const NavBar = (props) => {
   //設定Navbar-icon
@@ -17,6 +19,7 @@ const NavBar = (props) => {
     { item: '找活動', link: '/cartcheck', icon: 'place' },
     { item: '找靈感', link: '/discover', icon: 'idea' },
   ]
+
   //  TODO:
   //  1.JQ 設定NAV效果
   //  2.購物車?
@@ -44,8 +47,9 @@ const NavBar = (props) => {
         </Navbar.Brand>
         {/* 購物車Button */}
         <Nav className="order-lg-3 order-0">
-          <Nav.Link as={Link} to="/" className="nav-cart">
+          <Nav.Link as={Link} to="/" className="nav-cart hovertest1">
             <NavIcon className="cartico" item="cart" iconstyle="navcart" />
+            <CartHover123 className="hovertest" />
           </Nav.Link>
         </Nav>
         {/* 開合選單 */}
