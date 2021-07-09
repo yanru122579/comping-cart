@@ -1,92 +1,166 @@
 import React from 'react'
 import { FaTrashAlt, FaMinus } from 'react-icons/fa'
 import { BiPlusMedical } from 'react-icons/bi'
+import { useHistory } from 'react-router-dom'
+import CartInfoPlace from './CartInfoPlace'
 
-const CartItemPlace = (props) => {
-  const { setTotal } = props
+const CartItem = (props) => {
+  const {
+    mid,
+    pTotal,
+    sum,
+    total,
+    setTotal,
+    getSession,
+    sessionUpdate,
+    sessionDelete,
+    sessionClear,
+    handeleClass,
+    handleMin,
+  } = props
+  const history = useHistory()
+  // const [price, setPrice] = useState()
   return (
     <>
-      {/* －－－－－－－－－－－－－－－－－－－ */}
       <div className="cartMain">
         <div className=" cartTable">
-          <table className="table ">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>分區</th>
-                <th>日期/每帳價格</th>
-                <th>露營天數</th>
-                <th>帳數</th>
-                <th>價格</th>
-              </tr>
-            </thead>
-            <tbody className="">
-              <tr>
-                <td>1.</td>
-                <td>
-                  <img src="./img/營地.png" alt="" />
-                </td>
+          {getSession.length > 0 ? (
+            <table className="table ">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>分區</th>
+                  <th>日期/每帳價格</th>
+                  <th>露營天數</th>
+                  <th>帳數</th>
+                  <th>價格</th>
+                </tr>
+              </thead>
 
-                <td>A區草地</td>
-                <td>2021-06-02</td>
-                <td>1</td>
-                <td>
-                  <div className="tableItem">
-                    <button>
-                      <BiPlusMedical color="#FFBB00" />
-                    </button>
-                    <input type="text" value="3" />
-                    <button>
-                      <FaMinus color="#FFBB00" />
-                    </button>
-                  </div>
-                </td>
-                <td>$700</td>
-                <td>
-                  <button>
-                    <FaTrashAlt color="#000" />
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              {getSession?.map((item, index) => {
+                return (
+                  <tbody className="" key={index}>
+                    <tr>
+                      <td>{index + 1}.</td>
+                      <td>
+                        <img src="./img/冰桶.jpeg" alt="" />
+                      </td>
+
+                      <td>{item.product_name}</td>
+                      <td>{item.quantity * item.product_price}</td>
+                      {!total ? (
+                        <>
+                          <td>
+                            {/* <div className="tableItem"> */}
+                            <button
+                              onClick={() => {
+                                sessionUpdate(item.product_id, item.quantity++)
+                              }}
+                            >
+                              <BiPlusMedical color="#FFBB00" />
+                            </button>
+                            {item.quantity}
+                            <button
+                              onClick={() => {
+                                if (item.quantity === 1) return
+                                sessionUpdate(item.product_id, item.quantity--)
+                              }}
+                            >
+                              <FaMinus color="#FFBB00" />
+                            </button>
+                            {/* </div> */}
+                          </td>
+                          <td>
+                            <button
+                              onClick={() => {
+                                sessionDelete(item.product_id)
+                              }}
+                            >
+                              <FaTrashAlt color="#000" size="20px" />
+                            </button>
+                            {/* {setPrice(item.amount * item.price)} */}
+                          </td>
+                        </>
+                      ) : (
+                        <td>{item.quantity}</td>
+                      )}
+                    </tr>
+                  </tbody>
+                )
+              })}
+            </table>
+          ) : (
+            <div className="container">
+              <h3>目前購物車內尚無東西</h3>
+              <button
+                onClick={() => {
+                  history.push('/productlist')
+                }}
+              >
+                點我立即選購去
+              </button>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+            </div>
+          )}
         </div>
       </div>
-      <div className="cartPiceDetil">
-        <div className="cartPiceDetilItem1">
-          <p>品項:</p>
-          <p>小計:</p>
-          <p>
-            選擇折價券: <input type="text" value="週年慶折50" />
-          </p>
-          <p>
-            選擇運送方式: <input type="text" value="宅配 100/件" />
-          </p>
-        </div>
-        <div className="cartPiceDetilItem2">
-          <p>共2項</p>
-          <p>NT $ 1130</p>
-          <p>-NT $ 1130</p>
-          <p>NT $ 300</p>
-        </div>
-      </div>
-      <div className="cartPiceDetil">
-        <h4>總計金額:&emsp;</h4>
-        <h3>NT $ 11000</h3>
-      </div>
-      <div className="cartPiceBtn">
-        <button>繼續選購</button>
-        <button
-          onClick={() => {
-            setTotal(true)
-          }}
-        >
-          下一步
-        </button>
-      </div>
+      {!total && (
+        <>
+          <div className="cartPiceDetil">
+            <div className="cartPiceDetilItem1">
+              <p>品項:</p>
+              <p>小計:</p>
+              <p>
+                選擇折價券:
+                <select name="" id="" style={{ width: '150px' }}>
+                  <option value="">請選擇折價券</option>
+                </select>
+              </p>
+              <p>選擇運送方式: 100/件</p>
+              <h4>總計金額:&emsp;</h4>
+            </div>
+            <div className="cartPiceDetilItem2">
+              <p>共{pTotal(getSession)}項</p>
+              <p>NT $ {sum(getSession)}</p>
+              <p>-NT $ 1130</p>
+              <p>NT $ +{pTotal(getSession) * 100}</p>
+              <h3>NT $ {sum(getSession) - 1130 + pTotal(getSession) * 100}</h3>
+            </div>
+          </div>
+
+          <div className="cartPiceBtn">
+            <button>繼續選購</button>
+            <button
+              onClick={() => {
+                handleMin()
+                getSession.length && setTotal(true)
+                getSession.length && handeleClass(1)
+              }}
+            >
+              下一步
+            </button>
+          </div>
+        </>
+      )}
+      {total && (
+        <CartInfoPlace
+          mid={mid}
+          handeleClass={handeleClass}
+          pTotal={pTotal}
+          sum={sum}
+          total={total}
+          setTotal={setTotal}
+          getSession={getSession}
+          sessionClear={sessionClear}
+        />
+      )}
     </>
   )
 }
 
-export default CartItemPlace
+export default CartItem

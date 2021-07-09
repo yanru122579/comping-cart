@@ -16,6 +16,10 @@ const CartDetail = () => {
     setOrder(location.state)
   }, [])
 
+  const itemDisPlay = () => {
+    // if(cartId?.orderItem?.)
+  }
+
   return (
     <>
       <div className="container">
@@ -51,7 +55,7 @@ const CartDetail = () => {
       <h5>購物明細:</h5>
       <div className="cartMain">
         <div className=" cartTable">
-          <table className="table ">
+          {/* <table className="table ">
             <thead>
               <tr>
                 <th></th>
@@ -79,7 +83,70 @@ const CartDetail = () => {
                 )
               })}
             </tbody>
-          </table>
+          </table> */}
+          {console.log(cartId?.orderItem[0].product_id)}
+          {cartId?.orderItem[0].product_id && (
+            <table className="table ">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>商品名稱</th>
+                  <th>價格</th>
+                  <th>數量</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {cartId?.orderItem?.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>
+                        <img src="" alt="" />
+                      </td>
+
+                      <td>{v.cartName}</td>
+                      <td>{v.cartBuyP}</td>
+
+                      <td>{v.cartBuyQty}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+          {cartId?.orderItem[0].cpAreaId && (
+            <table className="table ">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>露營地</th>
+                  <th>天數</th>
+                  <th>數量</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {cartId?.orderItem?.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>
+                        <img src="" alt="" />
+                      </td>
+
+                      <td>{v.cpAreaId}</td>
+                      <td>{v.cpQty}</td>
+
+                      <td>{v.cpArea}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
       <div className="cartPiceDetil">

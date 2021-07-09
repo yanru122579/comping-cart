@@ -14,7 +14,7 @@ const NavBar = (props) => {
   const items = [
     { item: '找用品', link: '/ProductList', icon: 'product' },
     { item: '找場地', link: '/Cartorder', icon: 'event' },
-    { item: '找活動', link: '/event', icon: 'place' },
+    { item: '找活動', link: '/cartcheck', icon: 'place' },
     { item: '找靈感', link: '/discover', icon: 'idea' },
   ]
   //  TODO:

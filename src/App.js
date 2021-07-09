@@ -7,6 +7,8 @@ import Cart from './pages/cart/Cart'
 import CartInfo from './pages/cart/CartInfo'
 import CartDetail from './pages/cart/CartDetail'
 import CartOrder from './pages/cart/CartOrder'
+import CartCheck from './pages/cart/CartCheck'
+import CartCheckOrder from './pages/cart/CartCheckOrder'
 //測試商品頁
 import ProductList from './pages/ProductList/ProductList'
 //組合用元件
@@ -26,6 +28,12 @@ function App() {
             <Switch>
               <Route path="/ProductList">
                 <ProductList />
+              </Route>
+              <Route path="/cartcheckorder">
+                <CartCheckOrder />
+              </Route>
+              <Route path="/cartcheck">
+                <CartCheck />
               </Route>
               <Route path="/cartorder">
                 <CartOrder />

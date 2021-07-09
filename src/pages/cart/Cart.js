@@ -180,9 +180,20 @@ const Cart = () => {
     place: (
       <CartItemPlace
         // mycartDisplay={mycartDisplay}
+        handleMin={handleMin}
+        mid={mid}
+        handeleClass={handeleClass}
+        setTitle={setTitle}
+        title={title}
+        pTotal={pTotal}
         sum={sum}
         total={total}
         setTotal={setTotal}
+        getSession={getSession}
+        setGetSession={setGetSession}
+        sessionUpdate={sessionUpdate}
+        sessionDelete={sessionDelete}
+        sessionClear={sessionClear}
       />
     ),
   }
