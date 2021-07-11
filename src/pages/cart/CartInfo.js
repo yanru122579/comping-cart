@@ -11,13 +11,6 @@ import Swal from 'sweetalert2'
 // import { withFormik, Form, Field, ErrorMessage } from 'formik'
 // import * as yup from 'yup'
 
-//錯誤訊息的style
-const errMsg = {
-  color: 'red',
-  fontSize: '12px',
-  paddingLeft: '5',
-}
-
 // import CartTitle from './CartTitle'
 // import CartItem from './CartItem'
 // import Item from 'antd/lib/list/Item'
@@ -34,6 +27,11 @@ function CartInfo(props) {
   const [country, setCountry] = useState(-1)
   const [township, setTownship] = useState(-1)
   const [pay, setPay] = useState(false)
+  const [orderer, setOrderer] = useState(false)
+  //用來存放會員帶進來的使用者名稱
+  const [userName, setUserName] = useState('')
+  const [userCell, setUserCell] = useState('')
+  const [userEmail, setUserEmail] = useState('')
 
   const [countError, setCountError] = useState({
     country: '',
@@ -76,11 +74,14 @@ function CartInfo(props) {
     cartStatus: '待出貨',
     orderclass: '1',
   })
-
+  //如果資料傳進來的是value該怎麼處理
+  // console.log(countries)
+  // console.log(countries[3])
+  // console.log(townships[3][2])
   //寫入訂單
   async function addCartToSever(e) {
     e.preventDefault()
-
+    console.log(countries[country])
     //對地址做表單驗證
     if (country >= 0 && township >= 0) {
       const orderid = +new Date()
@@ -97,11 +98,12 @@ function CartInfo(props) {
         }
         data.orderItem.push(tempObj)
       }
+
       data.orderInfo = {
-        nNN: inputs.nNN,
+        nNN: orderer ? userName : inputs.nNN,
         nAA: countries[country] + townships[country][township] + inputs.nAA,
-        nCC: inputs.nCC,
-        nEE: inputs.nEE,
+        nCC: orderer ? userCell : inputs.nCC,
+        nEE: orderer ? userEmail : inputs.nEE,
         cartPayId: inputs.cartPayId,
         cartLogisticsId: inputs.cartLogisticsId,
         mid: inputs.mid,
@@ -286,17 +288,45 @@ function CartInfo(props) {
           <br />
           <label htmlFor="">訂購人姓名:</label>
           {/* <br /> */}
-          <input type="text" disabled />
+          <input
+            name="userName"
+            type="text"
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value)
+            }}
+          />
           <br />
           <label htmlFor="">訂購人手機:</label>
           <br />
-          <input type="text" disabled />
+          <input
+            name="userCell"
+            type="text"
+            value={userCell}
+            onChange={(e) => {
+              setUserCell(e.target.value)
+            }}
+          />
           <br />
           <label htmlFor="">訂購人信箱:</label>
           <br />
-          <input type="text" disabled />
+          <input
+            name="userEmail"
+            type="email"
+            value={userEmail}
+            onChange={(e) => {
+              setUserEmail(e.target.value)
+            }}
+          />
           <br />
-          <input type="checkbox" style={{ width: '20px' }} />
+          <input
+            type="checkbox"
+            checked={orderer}
+            style={{ width: '20px' }}
+            onClick={(e) => {
+              setOrderer(e.target.checked)
+            }}
+          />
           <label htmlFor="">同訂購人</label>
           <br />
           <label htmlFor="">
@@ -310,7 +340,7 @@ function CartInfo(props) {
             type="text"
             name="nNN"
             ref={nNNRef}
-            value={inputs.nNN}
+            value={orderer ? userName : inputs.nNN}
             onChange={handelChange}
             placeholder="請輸入收件人姓名"
             required
@@ -327,7 +357,7 @@ function CartInfo(props) {
             type="text"
             name="nCC"
             ref={nCCRef}
-            value={inputs.nCC}
+            value={orderer ? userCell : inputs.nCC}
             onChange={handelChange}
             placeholder="請輸入手機"
             pattern="09\d{2}-?\d{3}-?\d{3}"
@@ -346,7 +376,7 @@ function CartInfo(props) {
             type="email"
             name="nEE"
             ref={nEERef}
-            value={inputs.nEE}
+            value={orderer ? userEmail : inputs.nEE}
             onChange={handelChange}
             placeholder="請輸入信箱"
             required

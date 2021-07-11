@@ -9,16 +9,13 @@ import CartItem from './CartItem'
 import CartItemPlace from './CartItemPlace'
 import CartItemActivity from './CartItemActivity'
 import Swal from 'sweetalert2'
-//hover的顯示頁
-import CartHover from './CartHover'
+
 //信用卡
-// import PaymentForm from './PaymentForm'
+
 import 'react-credit-cards/es/styles-compiled.css'
 import ArticleCarousel from '../../components/ArticleCarousel'
 
 const Cart = (props) => {
-  //測試useRef
-
   const { getSession, setGetSession, sessionServer } = props
   //node 變更商品數量
   const sessionUpdate = async (sid, quantity, add = true) => {
@@ -57,6 +54,9 @@ const Cart = (props) => {
     const response = await fetch(request)
     const data = await response.json()
     setSessionCl(data)
+    setTimeout(() => {
+      sessionServer()
+    }, 100)
   }
   //node 刪除商品
   const sessionDelete = async (sid) => {
@@ -112,7 +112,7 @@ const Cart = (props) => {
       }, 100)
   }
 
-  //node的接收商品
+  //node的接收商品已經移到app.js
   // const sessionServer = async () => {
 
   //   const url = `http://localhost:4000/cart`

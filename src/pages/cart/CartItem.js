@@ -175,9 +175,11 @@ const CartItem = (props) => {
             <button>繼續選購</button>
             <button
               onClick={() => {
-                handleMin()
-                getSession.length && setTotal(true)
-                getSession.length && handeleClass(1)
+                if (cartLogistics >= 0) {
+                  handleMin()
+                  getSession.length && setTotal(true)
+                  getSession.length && handeleClass(1)
+                }
                 // cartLogisticsCheck()
               }}
             >
