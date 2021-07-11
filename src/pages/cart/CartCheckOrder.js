@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import moment from 'moment'
-import { IoIosArrowDown } from 'react-icons/io'
+
 import Swal from 'sweetalert2'
-import { Table } from 'react-bootstrap'
 
 const CartCheckOrder = () => {
-  const history = useHistory()
+  // const history = useHistory()
   const location = useLocation()
   const loadingRef = useRef(true)
-  const [number, setNumber] = useState()
+
   const [orderCheck, setOrderCheck] = useState()
   const useOrderCell = location?.state?.useOrderCell || 0
   const useOrderId = location?.state?.useOrderId || 0
-  console.log(useOrderCell)
-  console.log(useOrderId)
+  // console.log(useOrderCell)
+  // console.log(useOrderId)
   //查詢訂單
 
   const checkOrderServer = async () => {
@@ -56,11 +55,10 @@ const CartCheckOrder = () => {
     })
     const response = await fetch(request)
     const dataRes = await response.json()
-    console.log('伺服器回傳的json資料', dataRes)
+    // console.log('伺服器回傳的json資料', dataRes)
+    checkOrderServer()
   }
-  useEffect(() => {
-    orderEdit()
-  }, [number])
+
   return (
     <>
       {!loadingRef.current && (
@@ -178,7 +176,7 @@ const CartCheckOrder = () => {
                   <button
                     // value="2"
                     onClick={(e) => {
-                      setNumber('已取消')
+                      // setNumber('已取消')
                       setTimeout((e) => {
                         orderEdit(0)
                         Swal.fire('訂單已取消!', '期待您的再次購買!', 'success')
@@ -190,9 +188,9 @@ const CartCheckOrder = () => {
                   <button
                     value="1"
                     onClick={(e) => {
-                      setNumber('已完成')
-                      setTimeout(() => {
-                        orderEdit(e.target.value)
+                      // setNumber('已完成')
+                      setTimeout((e) => {
+                        orderEdit(1)
                         Swal.fire('訂單已完成!', '感謝您的購買!', 'success')
                       }, 500)
                     }}

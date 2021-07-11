@@ -29,7 +29,7 @@ const CartItemNav = (props) => {
           }}
         >
           商品租借
-          {getSession.length > 0 && (
+          {getSession?.length > 0 && (
             <div class="nav-counter nav-counter-blue">{getSession.length}</div>
           )}
         </button>
@@ -44,7 +44,7 @@ const CartItemNav = (props) => {
           }}
         >
           活動預約
-          {getSession.length > 0 && (
+          {getSession?.length > 0 && (
             <div class="nav-counter nav-counter-blue">{getSession.length}</div>
           )}
         </button>
@@ -59,7 +59,7 @@ const CartItemNav = (props) => {
           }}
         >
           場地租借
-          {getSession.length > 0 && (
+          {getSession?.length > 0 && (
             <div class="nav-counter nav-counter-blue">{getSession.length}</div>
           )}
         </button>

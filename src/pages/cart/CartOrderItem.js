@@ -1,10 +1,45 @@
 import React from 'react'
+import Swal from 'sweetalert2'
 
-import { IoIosArrowDown } from 'react-icons/io'
+// import { IoIosArrowDown } from 'react-icons/io'
+import { CgMoreO } from 'react-icons/cg'
 
 const CartOrderItem = (props) => {
-  const { item, select, setSelect, dataItem } = props
-
+  const { item, select, setSelect, dataItem, orderEdit } = props
+  //購買狀態的顏色改變
+  const status = () => {
+    if (item.cartStatus == '已完成') {
+      return (
+        <div
+          className="col col-2"
+          data-label="Amount"
+          style={{ color: '#0E7F41' }}
+        >
+          {item.cartStatus}
+        </div>
+      )
+    } else if (item.cartStatus == '已取消') {
+      return (
+        <div
+          className="col col-2"
+          data-label="Amount"
+          style={{ color: '#E21441' }}
+        >
+          {item.cartStatus}
+        </div>
+      )
+    } else {
+      return (
+        <div
+          className="col col-2"
+          data-label="Amount"
+          style={{ color: '#0071BC' }}
+        >
+          {item.cartStatus}
+        </div>
+      )
+    }
+  }
   const handleOrderClass = (value) => {
     let str = ''
     switch (value) {
@@ -159,9 +194,14 @@ const CartOrderItem = (props) => {
               <div className="col col-2" data-label="Customer Name">
                 {item.created_at}
               </div>
-              <div className="col col-2" data-label="Amount">
+              {status()}
+              {/* <div
+                className="col col-2"
+                data-label="Amount"
+                style={{ color: 'red' }}
+              >
                 {item.cartStatus}
-              </div>
+              </div> */}
               <div className="col col-2" data-label="Payment Status">
                 {item.cartPayName}
               </div>
@@ -179,8 +219,7 @@ const CartOrderItem = (props) => {
                       : setSelect(item.cartOrderId)
                   }}
                 >
-                  詳細
-                  <IoIosArrowDown />
+                  <CgMoreO />
                 </button>
               </div>
             </li>
@@ -224,7 +263,34 @@ const CartOrderItem = (props) => {
                   <div className="col-2 cartOrderItemBox">
                     <p>預定日期:</p>
                     <p>字串字串字串</p>
-                    <button>取消訂單</button>
+                    {item.cartStatus == '待出貨' && (
+                      <button
+                        onClick={(e) => {
+                          // console.log(item.cartOrderId)
+                          // setEditOrder(item.cartOrderId)
+                          Swal.fire({
+                            title: '你確定要取消嗎?',
+                            text: '您確定要取消嗎？!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: '確定取消!',
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              Swal.fire(
+                                '已取消',
+                                '期待下次再購買',
+                                'success',
+                                orderEdit(item.cartOrderId)
+                              )
+                            }
+                          })
+                        }}
+                      >
+                        取消訂單
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className="cartOrderDetail">

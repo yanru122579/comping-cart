@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 
 function ProductList(props) {
+  const { sessionServer } = props
   const setMycart = useState([])[1]
   const [show, setShow] = useState(false)
   const [productName, setProductName] = useState('')
-  const setSdata = useState()[1]
+  // const setSdata = useState()[1]
 
   const num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   //自制增加session
-  const sessionServer = async (sid) => {
+  const sessionServer1 = async (sid) => {
     // const newData = new Request()
     const url = `http://localhost:4000/cart/add?sid=${sid}&quantity=1`
     const request = new Request(url, {
@@ -25,8 +26,18 @@ function ProductList(props) {
     const data = await response.json()
     // const myData = await data.credentials
     console.log('data', data)
-    setSdata(data)
+    // setSdata(data)
+    //增加商品後記得刷新購物車讀取頁面
+    setTimeout(() => {
+      sessionServer()
+    }, 500)
   }
+  // useEffect(() => {
+  //   sessionServer()
+  // }, [Sdata])
+  useEffect(() => {
+    sessionServer1()
+  }, [])
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -184,7 +195,7 @@ function ProductList(props) {
             <button
               onClick={() => {
                 console.log(i)
-                sessionServer(v)
+                sessionServer1(v)
               }}
             >
               點我增加商品

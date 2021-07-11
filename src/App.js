@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import './App.css'
@@ -18,17 +18,38 @@ import MainContent from './components/MainContent'
 
 //購物車狀態使用
 function App() {
+  const [getSession, setGetSession] = useState('')
+  //node的接收商品
+  const sessionServer = async () => {
+    const url = `http://localhost:4000/cart`
+    const request = new Request(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: new Headers({
+        Accept: 'application/json',
+        // 'Content-Type': 'application/json',
+      }),
+    })
+    const response = await fetch(request)
+    const data = await response.json()
+    setGetSession(data)
+  }
+  //一進入頁面就讀取購物車內有無東西
+  useEffect(() => {
+    sessionServer()
+  }, [])
+
   return (
     <Router>
       <>
         {/* LOGO+標題+導覽列+上方選單 */}
-        <NavBar />
+        <NavBar getSession={getSession} setGetSession={setGetSession} />
         {/* 主內容區 */}
         <MainContent>
           <ScrollToTop>
             <Switch>
               <Route path="/ProductList">
-                <ProductList />
+                <ProductList sessionServer={sessionServer} />
               </Route>
               <Route path="/cartcheckorder">
                 <CartCheckOrder />
@@ -46,7 +67,11 @@ function App() {
                 <CartInfo />
               </Route>
               <Route path="/">
-                <Cart />
+                <Cart
+                  getSession={getSession}
+                  setGetSession={setGetSession}
+                  sessionServer={sessionServer}
+                />
               </Route>
             </Switch>
           </ScrollToTop>

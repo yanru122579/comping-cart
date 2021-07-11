@@ -21,12 +21,12 @@ const CartItem = (props) => {
   const [cartLogistics, setCartLogistics] = useState()
 
   const history = useHistory()
-  // const [price, setPrice] = useState()
+
   return (
     <>
       <div className="cartMain">
         <div className=" cartTable">
-          {getSession.length > 0 ? (
+          {getSession?.length > 0 ? (
             <table className="table ">
               <thead>
                 <tr>
@@ -56,7 +56,11 @@ const CartItem = (props) => {
                             {/* <div className="tableItem"> */}
                             <button
                               onClick={() => {
-                                sessionUpdate(item.product_id, item.quantity++)
+                                sessionUpdate(
+                                  item.product_id,
+                                  item.quantity,
+                                  true
+                                )
                               }}
                             >
                               <BiPlusMedical color="#FFBB00" />
@@ -65,7 +69,11 @@ const CartItem = (props) => {
                             <button
                               onClick={() => {
                                 if (item.quantity === 1) return
-                                sessionUpdate(item.product_id, item.quantity--)
+                                sessionUpdate(
+                                  item.product_id,
+                                  item.quantity,
+                                  false
+                                )
                               }}
                             >
                               <FaMinus color="#FFBB00" />
@@ -126,7 +134,7 @@ const CartItem = (props) => {
               <p>
                 選擇運送方式:
                 <select
-                  name="cartLogistics"
+                  name="cartLogistics1"
                   id=""
                   value={cartLogistics}
                   style={{ width: '150px' }}
@@ -137,14 +145,29 @@ const CartItem = (props) => {
                   <option value="2">自取</option>
                 </select>
               </p>
+              {sum(getSession) >= 10000 && (
+                <p style={{ color: 'red' }}>恭喜觸發滿萬送千活動:</p>
+              )}
               <h4>總計金額:&emsp;</h4>
             </div>
             <div className="cartPiceDetilItem2">
               <p>共{pTotal(getSession)}項</p>
               <p>NT $ {sum(getSession)}</p>
-              <p>-NT $ 1130</p>
-              <p>NT $ +{pTotal(getSession) * 100}</p>
-              <h3>NT $ {sum(getSession) - 1130 + pTotal(getSession) * 100}</h3>
+              <p style={{ color: 'red' }}>-NT $ 1130</p>
+              <p>NT $ {cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0}</p>
+              {sum(getSession) >= 10000 && (
+                <p style={{ color: 'red' }}>滿萬九折</p>
+              )}
+              <h3>
+                {sum(getSession) >= 10000
+                  ? (sum(getSession) -
+                      1130 +
+                      (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)) *
+                    0.9
+                  : sum(getSession) -
+                    1130 +
+                    (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)}
+              </h3>
             </div>
           </div>
 
@@ -155,6 +178,7 @@ const CartItem = (props) => {
                 handleMin()
                 getSession.length && setTotal(true)
                 getSession.length && handeleClass(1)
+                // cartLogisticsCheck()
               }}
             >
               下一步

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import CartHover123 from './CartHover123'
 //
 const NavBar = (props) => {
+  const { getSession } = props
   //設定Navbar-icon
   // 可以在各自的link中修改
   const items = [
@@ -49,7 +50,7 @@ const NavBar = (props) => {
         <Nav className="order-lg-3 order-0">
           <Nav.Link as={Link} to="/" className="nav-cart hovertest1">
             <NavIcon className="cartico" item="cart" iconstyle="navcart" />
-            <CartHover123 className="hovertest" />
+            <CartHover123 className="hovertest" getSession={getSession} />
           </Nav.Link>
         </Nav>
         {/* 開合選單 */}

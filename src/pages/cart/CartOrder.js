@@ -14,8 +14,9 @@ const CartOrder = () => {
   const [orderClass, setOrderClass] = useState('')
   //篩選有沒有出貨
   const [cartStatus, setCartStatus] = useState('')
-
-  console.log('paggg', data.totalPages)
+  //取消訂單
+  // const [editOrder, setEditOrder] = useState('')
+  // console.log('paggg', data.totalPages)
   //資料載入
 
   const addUserToSever = async () => {
@@ -25,7 +26,8 @@ const CartOrder = () => {
     // const newData = {}
 
     // 連接的伺服器資料網址
-    let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}`
+    // let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}&cartStatus=${cartStatus}`
+    let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}&cartStatus=${cartStatus}`
     // url = orderClass ? `${url}&orderClass=${orderClass}` : url
     // 注意資料格式要設定，伺服器才知道是json格式
     const request = new Request(url, {
@@ -48,6 +50,24 @@ const CartOrder = () => {
     //   alert('儲存完成')
     //   props.history.push('/')
     // }, 500)
+  }
+
+  //訂單取消
+  async function orderEdit(e) {
+    const url = `http://localhost:4000/cartorder/edit/${e}`
+
+    const request = new Request(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/josn',
+      }),
+    })
+    const response = await fetch(request)
+    const dataRes = await response.json()
+
+    addUserToSever()
   }
 
   const itemSever = async () => {
@@ -77,34 +97,26 @@ const CartOrder = () => {
     }
   }, [page])
   useEffect(() => {
+    if (cartStatus) {
+      addUserToSever()
+    }
+  }, [cartStatus])
+  useEffect(() => {
     if (orderClass || orderClass == '') {
       addUserToSever()
       setPage(1)
     }
   }, [orderClass])
+  useEffect(() => {
+    if (cartStatus || cartStatus == '') {
+      addUserToSever()
+      setPage(1)
+    }
+  }, [cartStatus])
 
   useEffect(() => {
     addUserToSever()
   }, [])
-
-  //判斷頁數
-  // const totalPages = () => {
-  //   let p = document.getElementById('pages').innerHTML
-  //   for (let i = 0; i < data.totalPages; i++) {
-  //     p += `<li className="page-item">
-  //         <button
-  //           className="page-link"
-  //           value={i}
-  //           onClick={() => {
-  //             setPage(i + 1)
-  //           }}
-  //         >
-  //           ${i + 1}
-  //         </button>
-  //       </li>`
-  //   }
-  // }
-  // console.log('page', data.totoPages)
 
   // let active = 2
   let items = []
@@ -125,7 +137,7 @@ const CartOrder = () => {
   return (
     <>
       {/* 新訂單開始 */}
-
+      {console.log('11', cartStatus)}
       <div className="containerPretty ">
         <div className="container">
           <div className="cartOrderTitle">
@@ -133,8 +145,13 @@ const CartOrder = () => {
               <FaSearch />
               查詢訂單
             </h5>
-            <select name="" id="">
-              <option value="-1">訂單狀態</option>
+            <select
+              name=""
+              id=""
+              // value="cartStatus"
+              onChange={(e) => setCartStatus(e.target.value)}
+            >
+              <option value="">訂單狀態</option>
               <option value="已完成">已完成</option>
               <option value="待出貨">待出貨</option>
               <option value="已取消">已取消</option>
@@ -172,6 +189,9 @@ const CartOrder = () => {
                 select={select}
                 setSelect={setSelect}
                 dataItem={dataItem}
+                // editOrder={editOrder}
+                // setEditOrder={setEditOrder}
+                orderEdit={orderEdit}
               />
             )
           })}

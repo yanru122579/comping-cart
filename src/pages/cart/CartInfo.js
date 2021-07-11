@@ -63,7 +63,15 @@ function CartInfo(props) {
     cartPayId: '1',
     cartLogisticsId: cartLogistics,
     mid: mid,
-    cartTotal: sum(getSession) - 1130 + pTotal(getSession) * 100,
+    cartTotal:
+      sum(getSession) >= 10000
+        ? (sum(getSession) -
+            1130 +
+            (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)) *
+          0.9
+        : sum(getSession) -
+          1130 +
+          (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0),
     cartDescription: '1',
     cartStatus: '待出貨',
     orderclass: '1',
@@ -254,7 +262,17 @@ function CartInfo(props) {
         </div>
         <div className="cartPiceDetilItem2">
           <p>共 {pTotal(getSession)} 項</p>{' '}
-          <p>NT $ {sum(getSession) - 1130 + pTotal(getSession) * 100}</p>
+          <p>
+            NT $
+            {sum(getSession) >= 10000
+              ? (sum(getSession) -
+                  1130 +
+                  (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)) *
+                0.9
+              : sum(getSession) -
+                1130 +
+                (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)}
+          </p>
         </div>
       </div>
       <h5>2.收貨人資料</h5>

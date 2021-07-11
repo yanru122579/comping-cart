@@ -14,11 +14,18 @@ import CartHover from './CartHover'
 //信用卡
 // import PaymentForm from './PaymentForm'
 import 'react-credit-cards/es/styles-compiled.css'
+import ArticleCarousel from '../../components/ArticleCarousel'
 
 const Cart = (props) => {
-  // const { getSession, setGetSession } = props
+  //測試useRef
+
+  const { getSession, setGetSession, sessionServer } = props
   //node 變更商品數量
-  const sessionUpdate = async (sid, quantity) => {
+  const sessionUpdate = async (sid, quantity, add = true) => {
+    quantity = add === true ? +quantity + 1 : +quantity - 1
+    if (quantity == 0) {
+      return
+    }
     const url = `http://localhost:4000/cart/update?sid=${sid}&quantity=${quantity}`
     const request = new Request(url, {
       method: 'GET',
@@ -32,6 +39,9 @@ const Cart = (props) => {
     const data = await response.json()
     // console.log('data', data)
     setSessionUp(data)
+    setTimeout(() => {
+      sessionServer()
+    }, 100)
   }
   //node 清空購物車
   const sessionClear = async () => {
@@ -76,10 +86,11 @@ const Cart = (props) => {
   const history = useHistory()
   const [type, setType] = useState('product')
   const [total, setTotal] = useState(false)
-  const [getSession, setGetSession] = useState([])
+  // const [getSession, setGetSession] = useState([])
   const setSessionUp = useState([])[1]
   const setSessionDl = useState([])[1]
   const setSessionCl = useState([])[1]
+  // const [cartLogistics, setCartLogistics] = useState('')
   //vover滑動用
 
   //驗證會員有無登入
@@ -102,41 +113,40 @@ const Cart = (props) => {
   }
 
   //node的接收商品
-  const sessionServer = async () => {
-    // const newData = new Request()
-    const url = `http://localhost:4000/cart`
-    const request = new Request(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: new Headers({
-        Accept: 'application/json',
-        // 'Content-Type': 'application/json',
-      }),
-    })
-    const response = await fetch(request)
-    const data = await response.json()
-    // const myData = await data.credentials
-    console.log('data', data)
-    setGetSession(data)
-  }
+  // const sessionServer = async () => {
+
+  //   const url = `http://localhost:4000/cart`
+  //   const request = new Request(url, {
+  //     method: 'GET',
+  //     credentials: 'include',
+  //     headers: new Headers({
+  //       Accept: 'application/json',
+  //       // 'Content-Type': 'application/json',
+  //     }),
+  //   })
+  //   const response = await fetch(request)
+  //   const data = await response.json()
+
+  //   setGetSession(data)
+  // }
 
   useEffect(() => {
     sessionServer()
   }, [])
   // useEffect(() => {
-  //   sessionServer()
+  //   if (getSession) {
+  //     sessionServer()
+  //   }
   // }, [getSession])
 
-  useEffect(() => {
-    if (getSession) {
-      sessionUpdate()
-    }
-  }, [getSession])
+  // useEffect(() => {
+  //   sessionUpdate()
+  // }, [getSession])
 
   //計算總價用的函示
   const sum = (items) => {
     let total = 0
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i < items?.length; i++) {
       total += items[i].product_price * items[i].quantity
     }
     return total
@@ -144,7 +154,7 @@ const Cart = (props) => {
   //計件用
   const pTotal = (items) => {
     let total = 0
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i < items?.length; i++) {
       total += parseInt(items[i].quantity)
     }
     return total
@@ -245,8 +255,15 @@ const Cart = (props) => {
         <CartItemNav setType={setType} type={type} getSession={getSession} />
       )}
       {typeObj[type]}
-      {!total && (
-        <>
+      {!total && <ArticleCarousel />}
+    </>
+  )
+}
+
+export default Cart
+
+{
+  /* <>
           <div className="cartCards">
             <div className="cartCard">
               <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
@@ -282,10 +299,5 @@ const Cart = (props) => {
               </div>
             </div>
           </div>
-        </>
-      )}
-    </>
-  )
+        </> */
 }
-
-export default Cart
