@@ -1,5 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2'
+import { countries, townships, postcodes } from '../../json/townships'
 
 // import { IoIosArrowDown } from 'react-icons/io'
 import { CgMoreO } from 'react-icons/cg'
@@ -303,7 +304,11 @@ const CartOrderItem = (props) => {
                   <div className="item2 ">
                     <ul>
                       <li>{item.nNN}</li>
-                      <li>{item.nAA}</li>
+                      <li>
+                        {countries[item.countries] +
+                          townships[item.countries][item.townships] +
+                          item.nAA}
+                      </li>
                     </ul>
                   </div>
                   <div className="item1 ">

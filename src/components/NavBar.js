@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/navnfooter.css'
 import NavIcon from './NavIcon.js' //icon SVG路徑檔案
 import { Link } from 'react-router-dom'
-
+import $ from 'jquery'
 //購物車下拉用
 import CartHover123 from './CartHover123'
 //
@@ -20,6 +20,19 @@ const NavBar = (props) => {
     { item: '找活動', link: '/cartcheck', icon: 'place' },
     { item: '找靈感', link: '/discover', icon: 'idea' },
   ]
+  let lastScorll = 0
+
+  $(window).scroll(function () {
+    const scrollNow = $(this).scrollTop() //120
+
+    if (lastScorll < scrollNow) {
+      $('.nav-bg').addClass('hide')
+    } else {
+      $('.nav-bg').removeClass('hide')
+    }
+
+    lastScorll = scrollNow // 100
+  })
 
   //  TODO:
   //  1.JQ 設定NAV效果

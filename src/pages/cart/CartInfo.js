@@ -32,7 +32,8 @@ function CartInfo(props) {
   const [userName, setUserName] = useState('')
   const [userCell, setUserCell] = useState('')
   const [userEmail, setUserEmail] = useState('')
-
+  // console.log(country)
+  // console.log(township)
   const [countError, setCountError] = useState({
     country: '',
     township: '',
@@ -79,76 +80,122 @@ function CartInfo(props) {
   // console.log(countries[3])
   // console.log(townships[3][2])
   //寫入訂單
-  async function addCartToSever(e) {
-    e.preventDefault()
-    console.log(countries[country])
-    //對地址做表單驗證
-    if (country >= 0 && township >= 0) {
-      const orderid = +new Date()
-      let data = {
-        orderItem: [],
-      }
-      for (let item of getSession) {
-        const tempObj = {
-          product_id: item.product_id,
-          cartName: item.product_name,
-          cartBuyQty: item.quantity,
-          cartBuyP: item.product_price,
-          cartOrderId: orderid,
-        }
-        data.orderItem.push(tempObj)
-      }
+  // async function addCartToSever(e) {
+  //   // e.preventDefault()
+  //   console.log(countries[country])
+  //   //對地址做表單驗證
+  //   if (country >= 0 && township >= 0) {
+  //     const orderid = +new Date()
+  //     let data = {
+  //       orderItem: [],
+  //     }
+  //     for (let item of getSession) {
+  //       const tempObj = {
+  //         product_id: item.product_id,
+  //         cartName: item.product_name,
+  //         cartBuyQty: item.quantity,
+  //         cartBuyP: item.product_price,
+  //         cartOrderId: orderid,
+  //       }
+  //       data.orderItem.push(tempObj)
+  //     }
 
-      data.orderInfo = {
-        nNN: orderer ? userName : inputs.nNN,
-        nAA: countries[country] + townships[country][township] + inputs.nAA,
-        nCC: orderer ? userCell : inputs.nCC,
-        nEE: orderer ? userEmail : inputs.nEE,
-        cartPayId: inputs.cartPayId,
-        cartLogisticsId: inputs.cartLogisticsId,
-        mid: inputs.mid,
-        cartTotal: inputs.cartTotal,
-        cartDescription: inputs.cartDescription,
-        cartStatus: inputs.cartStatus,
-        cartOrderId: orderid,
-        orderclass: inputs.orderclass,
-        created_at: new Date(),
-      }
-      console.log('一開始收到的資料', data)
-      //寫入的網址
-      const url = 'http://localhost:4000/cartorder/add/'
+  //     data.orderInfo = {
+  //       nNN: orderer ? userName : inputs.nNN,
+  //       countries: country,
+  //       townships: township,
+  //       nAA: inputs.nAA,
+  //       nCC: orderer ? userCell : inputs.nCC,
+  //       nEE: orderer ? userEmail : inputs.nEE,
+  //       cartPayId: inputs.cartPayId,
+  //       cartLogisticsId: inputs.cartLogisticsId,
+  //       mid: inputs.mid,
+  //       cartTotal: inputs.cartTotal,
+  //       cartDescription: inputs.cartDescription,
+  //       cartStatus: inputs.cartStatus,
+  //       cartOrderId: orderid,
+  //       orderclass: inputs.orderclass,
+  //       created_at: new Date(),
+  //     }
+  //     console.log('一開始收到的資料', data)
+  //     //寫入的網址
+  //     const url = 'http://localhost:4000/cartorder/add/'
 
-      const request = new Request(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: new Headers({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }),
-      })
-      console.log('JSON字串', JSON.stringify(data))
-      const response = await fetch(request)
-      const dataRes = await response.json()
+  //     const request = new Request(url, {
+  //       method: 'POST',
+  //       body: JSON.stringify(data),
+  //       headers: new Headers({
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       }),
+  //     })
+  //     console.log('JSON字串', JSON.stringify(data))
+  //     const response = await fetch(request)
+  //     const dataRes = await response.json()
 
-      console.log('伺服器回傳的json資料', dataRes)
-      //送出資料後清除session
-      // 送出資料後跳轉頁面
-      setTimeout(() => {
-        sessionClear()
-        // setSubmitting(false)
+  //     console.log('伺服器回傳的json資料', dataRes)
+  //     //送出資料後清除session
+  //     // 送出資料後跳轉頁面
+  //     setTimeout(() => {
+  //       sessionClear()
+  //       // setSubmitting(false)
 
-        history.push('/cartdetail', { cartId: data })
-        Swal.fire('結帳成功!', '感謝您的購買!', 'success')
-      }, 500)
-    } else {
-      const NewCountError = {}
-      if (country == -1 && township == -1) {
-        NewCountError.country = '請填寫收件人欄位'
-      }
+  //       history.push('/cartdetail', { cartId: data })
+  //       Swal.fire('結帳成功!', '感謝您的購買!', 'success')
+  //     }, 500)
+  //   } else {
+  //     const NewCountError = {}
+  //     if (country == -1 && township == -1) {
+  //       NewCountError.country = '請填寫收件人欄位'
+  //     }
 
-      setCountError(NewCountError)
-    }
-  }
+  //     setCountError(NewCountError)
+  //   }
+  // }
+  /////測試金流區域
+  //寫入訂單
+  // async function addCartToSever(e) {
+  //   const data = {
+  //     nNN: orderer ? userName : inputs.nNN,
+  //     countries: country,
+  //     townships: township,
+  //     nAA: inputs.nAA,
+  //     nCC: orderer ? userCell : inputs.nCC,
+  //     nEE: orderer ? userEmail : inputs.nEE,
+  //     cartPayId: inputs.cartPayId,
+  //     cartLogisticsId: inputs.cartLogisticsId,
+  //     mid: inputs.mid,
+  //     cartTotal: inputs.cartTotal,
+  //     cartDescription: inputs.cartDescription,
+  //     cartStatus: inputs.cartStatus,
+  //     cartOrderId: inputs.orderid,
+  //     orderclass: inputs.orderclass,
+  //     created_at: new Date(),
+  //   }
+  //   console.log('一開始收到的資料', data)
+  //   //寫入的網址
+  //   const url = 'https://ccore.newebpay.com/MPG/mpg_gateway'
+
+  //   const request = new Request(url, {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: new Headers({
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //       HashKey: 'q2fPeTSjRTKpZKMXlQ6cKtFqPsuf9Czb',
+  //       HashIV: 'HashIV',
+  //       MerchantID: 'MS121481874',
+  //     }),
+  //   })
+  //   console.log('JSON字串', JSON.stringify(data))
+  //   const response = await fetch(request)
+  //   const dataRes = await response.json()
+
+  //   console.log('伺服器回傳的json資料', dataRes)
+  //送出資料後清除session
+  // 送出資料後跳轉頁面
+  // }
+  /////測試金流區域
   //處理每個欄位的變動
   const handelChange = (e) => {
     const newInputs = {
@@ -280,11 +327,18 @@ function CartInfo(props) {
       <h5>2.收貨人資料</h5>
       <div className="cartMain">
         <form
+          name="Newebpay"
+          method="post"
+          action="https://ccore.newebpay.com/MPG/mpg_gateway"
           className="cartInfoMenber"
-          onSubmit={addCartToSever}
+          // onSubmit={addCartToSever}
           onChange={handleChangeInput}
           onInvalid={handleInvalid}
         >
+          MerchantID:
+          <input type="text" name="MS121481874" value="" />
+          <br />
+          {/* <input type="text" name="MS121481874" value="MS121481874" /> */}
           <br />
           <label htmlFor="">訂購人姓名:</label>
           {/* <br /> */}
@@ -495,8 +549,9 @@ function CartInfo(props) {
             </button>
 
             <button
+              value="Sbumit"
               type="submit"
-              onSubmit={() => addCartToSever()}
+              // onSubmit={() => addCartToSever()}
 
               // disabled={isSubmitting}
             >

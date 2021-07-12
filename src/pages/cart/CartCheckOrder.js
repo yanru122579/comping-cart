@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
+import { countries, townships, postcodes } from '../../json/townships'
 import moment from 'moment'
 
 import Swal from 'sweetalert2'
@@ -154,7 +155,13 @@ const CartCheckOrder = () => {
                     <div className="item2 ">
                       <ul>
                         <li>{orderCheck[0]?.nNN}</li>
-                        <li>{orderCheck[0]?.nAA}</li>
+                        <li>
+                          {countries[orderCheck[0]?.countries] +
+                            townships[orderCheck[0]?.countries][
+                              orderCheck[0]?.townships
+                            ] +
+                            orderCheck[0]?.nAA}
+                        </li>
                       </ul>
                     </div>
                     <div className="item1 ">

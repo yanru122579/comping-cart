@@ -6,6 +6,10 @@
 }
 .nav-bg {
   background-color: #145041;
+  transition: 0.5s;
+}
+.nav-bg.hide {
+  transform: translateY(-100px);
 }
 .nav-logo {
   height: 50px;

@@ -3,6 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom'
 // import CartTitle from './CartTitle'
 import moment from 'moment'
 import { AiFillCaretRight } from 'react-icons/ai'
+import { countries, townships, postcodes } from '../../json/townships'
 
 // import CartItem from './CartItem'
 
@@ -197,7 +198,13 @@ const CartDetail = () => {
             <li>{cartId.orderInfo.nNN}</li>
             <li>{cartId.orderInfo.nCC}</li>
             <li>{cartId.orderInfo.nEE}</li>
-            <li>{cartId.orderInfo.nAA}</li>
+            <li>
+              {countries[cartId.orderInfo.countries] +
+                townships[cartId.orderInfo.countries][
+                  cartId.orderInfo.townships
+                ] +
+                cartId.orderInfo.nAA}
+            </li>
             <li>{cartId.orderInfo.cartPayId && '信用卡結帳'}</li>
             <li>已付清</li>
           </ul>

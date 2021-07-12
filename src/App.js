@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import './App.css'
+//引入jq
+import $ from 'jquery'
 //我的頁面
 import Cart from './pages/cart/Cart'
 import CartInfo from './pages/cart/CartInfo'
