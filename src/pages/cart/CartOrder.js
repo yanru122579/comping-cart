@@ -27,7 +27,7 @@ const CartOrder = () => {
 
     // 連接的伺服器資料網址
     // let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}&cartStatus=${cartStatus}`
-    let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}&cartStatus=${cartStatus}`
+    let url = `http://localhost:4000/cartorder/api/?page=${page}&orderClass=${orderClass}&cartStatus=${cartStatus}&mid=${1}`
     // url = orderClass ? `${url}&orderClass=${orderClass}` : url
     // 注意資料格式要設定，伺服器才知道是json格式
     const request = new Request(url, {

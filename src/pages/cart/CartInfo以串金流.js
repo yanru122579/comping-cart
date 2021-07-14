@@ -8,16 +8,62 @@ import PaymentForm from './PaymentForm'
 // import { Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { date } from 'yup'
-import { useEffect } from 'react'
-
+// var nodeEnv = process.env.NODE_ENV
+// require('dotenv').config()
+// const dotenv = require('dotenv')
+// const Dotenv = require('dotenv-webpack')
 // import { withFormik, Form, Field, ErrorMessage } from 'formik'
 // import * as yup from 'yup'
 
 // import CartTitle from './CartTitle'
 // import CartItem from './CartItem'
 // import Item from 'antd/lib/list/Item'
-
+// const MERCHANTID = process.env.REACT_APP_MERCHANTID
+//導入藍星用 sha256編碼
+// 78f1a7911c20106903a2be6255fc42348ef84e8bd83988b7280788ccaa500165a140e0ddc8f5f8ba923ae4e66ea4dd49fd5cbd0b6482104e10d0ef91f739dcb6368d03fc8fcfd08a39ea58ab0bcd03f14cec6856cf78578e34c3f8bea6dec241da6ebbbc2c96b87cd940c9dac9c7b080caf285499ebb821370c7c5f5530092f438f5902311b3f4c0f0832e5edaee66cc1970f886cd4bc80a6b529a46b3fdb6c6
+import aes from 'crypto-js/aes'
+import sha2566 from 'sha256'
+import crypto from 'crypto'
 function CartInfo(props) {
+  //藍新用
+  const spgateway = {
+    HashKey: process.env.REACT_APP_HASHKEY,
+    HashIV: process.env.REACT_APP_HASHIV,
+    MerchantID: process.env.REACT_APP_MERCHANTID,
+  }
+  let parameter = `MerchantID=MS121481874&RespondType=JSON&TimeStamp=1846666662&Version=1.5&MerchantOrderNo=1846666662&Amt=49&ItemDesc=TEST&Email=eagle20064%40icloud.com`
+
+  function creat_mpg_aes_encrypt() {
+    let encrypt = crypto.createCipheriv(
+      'aes256',
+      spgateway.HashKey,
+      spgateway.HashIV
+    )
+    const enc = encrypt.update(parameter, 'utf8', 'hex')
+    // parameter = `HashKey=${spgateway.HashKey}&${parameter}&$HashIV=${spgateway.HashIV}`
+
+    // console.log('函式內呼叫', enc + encrypt.final('hex'))
+    return enc + encrypt.final('hex')
+  }
+  // console.log('函式外呼叫', creat_mpg_aes_encrypt())
+
+  function create_mpg_sha_encrypt() {
+    // let sha = crypto.createHash('sha256')
+    let plainText = `HashKey=${
+      spgateway.HashKey
+    }&${creat_mpg_aes_encrypt()}&HashIV=${spgateway.HashIV}`
+    // let eee = sha.update(plainText).digest('hex').toUpperCase()
+    const shaa = sha2566(plainText).toUpperCase()
+    // console.log('key', shaa)
+    return shaa
+  }
+  console.log(creat_mpg_aes_encrypt())
+  console.log(create_mpg_sha_encrypt())
+
+  // console.log('這段看有無東西', aesstest)
+  // console.log('123', parameter)
+  // console.log(spgateway.MerchantID)
+  // console.log(spgateway)
   const { cartLogistics } = props
   // console.log(countries, townships, postcodes)
   //reactBootstrap用
@@ -34,8 +80,6 @@ function CartInfo(props) {
   const [userName, setUserName] = useState('')
   const [userCell, setUserCell] = useState('')
   const [userEmail, setUserEmail] = useState('')
-  //用來抓會員資料
-  const [fetchmid, setFetchmid] = useState('')
   // console.log(country)
   // console.log(township)
   const [countError, setCountError] = useState({
@@ -84,99 +128,123 @@ function CartInfo(props) {
   // console.log(countries[3])
   // console.log(townships[3][2])
   //寫入訂單
-  async function addCartToSever(e) {
-    e.preventDefault()
+  // async function addCartToSever(e) {
+  //   e.preventDefault()
 
-    console.log(countries[country])
-    //對地址做表單驗證
-    if (country >= 0 && township >= 0) {
-      const orderid = +new Date()
-      let data = {
-        orderItem: [],
-      }
-      for (let item of getSession) {
-        const tempObj = {
-          product_id: item.product_id,
-          cartName: item.product_name,
-          cartBuyQty: item.quantity,
-          cartBuyP: item.product_price,
-          cartOrderId: orderid,
-        }
-        data.orderItem.push(tempObj)
-      }
+  //   console.log(countries[country])
+  //   //對地址做表單驗證
+  //   if (country >= 0 && township >= 0) {
+  //     const orderid = +new Date()
+  //     let data = {
+  //       orderItem: [],
+  //     }
+  //     for (let item of getSession) {
+  //       const tempObj = {
+  //         product_id: item.product_id,
+  //         cartName: item.product_name,
+  //         cartBuyQty: item.quantity,
+  //         cartBuyP: item.product_price,
+  //         cartOrderId: orderid,
+  //       }
+  //       data.orderItem.push(tempObj)
+  //     }
 
-      data.orderInfo = {
-        nNN: orderer ? userName : inputs.nNN,
-        countries: country,
-        townships: township,
-        nAA: inputs.nAA,
-        nCC: orderer ? userCell : inputs.nCC,
-        nEE: orderer ? userEmail : inputs.nEE,
-        cartPayId: inputs.cartPayId,
-        cartLogisticsId: inputs.cartLogisticsId,
-        mid: inputs.mid,
-        cartTotal: inputs.cartTotal,
-        cartDescription: inputs.cartDescription,
-        cartStatus: inputs.cartStatus,
-        cartOrderId: orderid,
-        orderclass: inputs.orderclass,
-        created_at: new Date(),
-      }
-      console.log('一開始收到的資料', data)
-      //寫入的網址
-      const url = 'http://localhost:4000/cartorder/add/'
+  //     data.orderInfo = {
+  //       nNN: orderer ? userName : inputs.nNN,
+  //       countries: country,
+  //       townships: township,
+  //       nAA: inputs.nAA,
+  //       nCC: orderer ? userCell : inputs.nCC,
+  //       nEE: orderer ? userEmail : inputs.nEE,
+  //       cartPayId: inputs.cartPayId,
+  //       cartLogisticsId: inputs.cartLogisticsId,
+  //       mid: inputs.mid,
+  //       cartTotal: inputs.cartTotal,
+  //       cartDescription: inputs.cartDescription,
+  //       cartStatus: inputs.cartStatus,
+  //       cartOrderId: orderid,
+  //       orderclass: inputs.orderclass,
+  //       created_at: new Date(),
+  //     }
+  //     console.log('一開始收到的資料', data)
+  //     //寫入的網址
+  //     const url = 'http://localhost:4000/cartorder/add/'
 
-      const request = new Request(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: new Headers({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }),
-      })
-      console.log('JSON字串', JSON.stringify(data))
-      const response = await fetch(request)
-      const dataRes = await response.json()
+  //     const request = new Request(url, {
+  //       method: 'POST',
+  //       body: JSON.stringify(data),
+  //       headers: new Headers({
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       }),
+  //     })
+  //     console.log('JSON字串', JSON.stringify(data))
+  //     const response = await fetch(request)
+  //     const dataRes = await response.json()
 
-      console.log('伺服器回傳的json資料', dataRes)
-      //送出資料後清除session
-      // 送出資料後跳轉頁面
-      setTimeout(() => {
-        sessionClear()
-        // setSubmitting(false)
+  //     console.log('伺服器回傳的json資料', dataRes)
+  //     //送出資料後清除session
+  //     // 送出資料後跳轉頁面
+  //     setTimeout(() => {
+  //       sessionClear()
+  //       // setSubmitting(false)
 
-        history.push('/cartdetail', { cartId: data })
-        Swal.fire('結帳成功!', '感謝您的購買!', 'success')
-      }, 500)
-    } else {
-      const NewCountError = {}
-      if (country == -1 && township == -1) {
-        NewCountError.country = '請填寫收件人欄位'
-      }
+  //       history.push('/cartdetail', { cartId: data })
+  //       Swal.fire('結帳成功!', '感謝您的購買!', 'success')
+  //     }, 500)
+  //   } else {
+  //     const NewCountError = {}
+  //     if (country == -1 && township == -1) {
+  //       NewCountError.country = '請填寫收件人欄位'
+  //     }
 
-      setCountError(NewCountError)
-    }
-  }
+  //     setCountError(NewCountError)
+  //   }
+  // }
+  /////測試金流區域
+  //寫入訂單
+  // async function addCartToSever(e) {
+  //   const data = {
+  //     nNN: orderer ? userName : inputs.nNN,
+  //     countries: country,
+  //     townships: township,
+  //     nAA: inputs.nAA,
+  //     nCC: orderer ? userCell : inputs.nCC,
+  //     nEE: orderer ? userEmail : inputs.nEE,
+  //     cartPayId: inputs.cartPayId,
+  //     cartLogisticsId: inputs.cartLogisticsId,
+  //     mid: inputs.mid,
+  //     cartTotal: inputs.cartTotal,
+  //     cartDescription: inputs.cartDescription,
+  //     cartStatus: inputs.cartStatus,
+  //     cartOrderId: inputs.orderid,
+  //     orderclass: inputs.orderclass,
+  //     created_at: new Date(),
+  //   }
+  //   console.log('一開始收到的資料', data)
+  //   //寫入的網址
+  //   const url = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
-  //抓會員資料
-  const memberToSever = async () => {
-    const url = `http://localhost:4000/cartorder/member/1`
-    const request = new Request(url, {
-      method: 'GET',
-      credentials: 'include',
-      headers: new Headers({
-        Accept: 'application/json',
-      }),
-    })
-    const response = await fetch(request)
-    const data = await response.json()
-    setFetchmid(data)
-  }
-  console.log(fetchmid)
-  useEffect(() => {
-    memberToSever()
-  }, [])
+  //   const request = new Request(url, {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: new Headers({
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //       HashKey: 'q2fPeTSjRTKpZKMXlQ6cKtFqPsuf9Czb',
+  //       HashIV: 'HashIV',
+  //       MerchantID: 'MS121481874',
+  //     }),
+  //   })
+  //   console.log('JSON字串', JSON.stringify(data))
+  //   const response = await fetch(request)
+  //   const dataRes = await response.json()
 
+  //   console.log('伺服器回傳的json資料', dataRes)
+  //送出資料後清除session
+  // 送出資料後跳轉頁面
+  // }
+  /////測試金流區域
   //處理每個欄位的變動
   const handelChange = (e) => {
     const newInputs = {
@@ -225,6 +293,22 @@ function CartInfo(props) {
       if (!field.value.trim()) {
         setErrorMsg(field.message)
 
+        // switch (field.name) {
+        //   case 'nEE':
+        //     nEERef.current.focus()
+        //     break
+        //   case 'nCC':
+        //     nCCRef.current.focus()
+        //     break
+        //   case 'nAA':
+        //     nAARef.current.focus()
+        //     break
+        //   case 'nNN':
+        //     nNNRef.current.focus()
+        //     break
+        //   default:
+        //     break
+        // }
         if (field.name === 'nNN') {
           nNNRef.current.focus()
           return
@@ -296,21 +380,31 @@ function CartInfo(props) {
           method="post"
           action="https://ccore.newebpay.com/MPG/mpg_gateway"
           className="cartInfoMenber"
-          onSubmit={addCartToSever}
+          // onSubmit={addCartToSever}
           onChange={handleChangeInput}
           onInvalid={handleInvalid}
         >
-          {/* MerchantID:
-          <input type="text" name="MS121481874" value="" />
-          <br /> */}
-          {/* <input type="text" name="MS121481874" value="MS121481874" /> */}
+          {/* 這邊丟入測試金流 */}
+
+          <input type="text" name="MerchantID" value="MS121481874" />
+          <input type="text" name="RespondType" value="JSON" />
+          <input type="text" name="TradeSha" value={create_mpg_sha_encrypt()} />
+          <input type="text" name="TimeStamp" value="1846666662" />
+          <input type="text" name="Version" value="1.5" />
+          <input type="text" name="MerchantOrderNo" value="1846666662" />
+          <input type="text" name="Amt" value="49" />
+          <input type="text" name="ItemDesc" value="TEST" />
+          <input type="email" name="Email" value="eagle20064@icloud.com" />
+          <input type="text" name="LoginType" value="0" />
+          <input type="text" name="TradeInfo" value={creat_mpg_aes_encrypt()} />
+          {/* 這邊丟入測試金流 */}
           <br />
           <label htmlFor="">訂購人姓名:</label>
           {/* <br /> */}
           <input
             name="userName"
             type="text"
-            value={fetchmid[0]?.fName + fetchmid[0]?.lName}
+            value={userName}
             onChange={(e) => {
               setUserName(e.target.value)
             }}
@@ -321,7 +415,7 @@ function CartInfo(props) {
           <input
             name="userCell"
             type="text"
-            value={fetchmid[0]?.phone}
+            value={userCell}
             onChange={(e) => {
               setUserCell(e.target.value)
             }}
@@ -332,7 +426,7 @@ function CartInfo(props) {
           <input
             name="userEmail"
             type="email"
-            value={fetchmid[0]?.email}
+            value={userEmail}
             onChange={(e) => {
               setUserEmail(e.target.value)
             }}
@@ -359,9 +453,7 @@ function CartInfo(props) {
             type="text"
             name="nNN"
             ref={nNNRef}
-            value={
-              orderer ? fetchmid[0]?.fName + fetchmid[0]?.lName : inputs.nNN
-            }
+            value={orderer ? userName : inputs.nNN}
             onChange={handelChange}
             placeholder="請輸入收件人姓名"
             required
@@ -378,7 +470,7 @@ function CartInfo(props) {
             type="text"
             name="nCC"
             ref={nCCRef}
-            value={orderer ? fetchmid[0]?.phone : inputs.nCC}
+            value={orderer ? userCell : inputs.nCC}
             onChange={handelChange}
             placeholder="請輸入手機"
             pattern="09\d{2}-?\d{3}-?\d{3}"
@@ -397,7 +489,7 @@ function CartInfo(props) {
             type="email"
             name="nEE"
             ref={nEERef}
-            value={orderer ? fetchmid[0]?.email : inputs.nEE}
+            value={orderer ? userEmail : inputs.nEE}
             onChange={handelChange}
             placeholder="請輸入信箱"
             required
@@ -424,7 +516,7 @@ function CartInfo(props) {
             >
               <option value="-1">選擇縣市</option>
               {countries.map((value, index) => (
-                <option key={index} value="2">
+                <option key={index} value={index}>
                   {value}
                 </option>
               ))}
@@ -518,7 +610,7 @@ function CartInfo(props) {
             <button
               value="Sbumit"
               type="submit"
-              onSubmit={() => addCartToSever()}
+              // onSubmit={() => addCartToSever()}
 
               // disabled={isSubmitting}
             >
