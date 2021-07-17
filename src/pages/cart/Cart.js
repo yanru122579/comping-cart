@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../../styles/cart.scss'
 import { AiFillCaretRight } from 'react-icons/ai'
 import { useHistory } from 'react-router-dom'
-
+import moment from 'moment'
 // import CartTitle from './CartTitle'
 import CartItemNav from './CartItemNav'
 import CartItem from './CartItem'
@@ -16,7 +16,12 @@ import 'react-credit-cards/es/styles-compiled.css'
 import ArticleCarousel from '../../components/ArticleCarousel'
 
 const Cart = (props) => {
-  const { getSession, setGetSession, sessionServer } = props
+  const { getSession, setGetSession, sessionServer, startTime, endTime } = props
+  //計算日期
+  const start_date = moment(startTime, 'YYYY-MM-DD')
+  const end_date = moment(endTime, 'YYYY-MM-DD')
+  const gameDay = end_date.diff(start_date, 'day')
+  console.log(gameDay)
   //node 變更商品數量
   const sessionUpdate = async (sid, quantity, add = true) => {
     quantity = add === true ? +quantity + 1 : +quantity - 1
@@ -95,6 +100,10 @@ const Cart = (props) => {
 
   //驗證會員有無登入
   const [mid, setMid] = useState()
+  //讀取會員資料
+  const [fetchmid, setFetchmid] = useState()
+  //折價券用
+  const [newMember, setNewMember] = useState(0)
 
   useEffect(() => {
     setMid(sessionStorage.getItem('mid'))
@@ -111,6 +120,23 @@ const Cart = (props) => {
         Swal.fire('未登入!', '請先登入', 'success')
       }, 100)
   }
+  //抓會員資料
+  const memberToSever = async () => {
+    const url = `http://localhost:4000/cartorder/member/183`
+    const request = new Request(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: new Headers({
+        Accept: 'application/json',
+      }),
+    })
+    const response = await fetch(request)
+    const data = await response.json()
+    setFetchmid(data)
+  }
+  useEffect(() => {
+    memberToSever()
+  }, [])
 
   //node的接收商品已經移到app.js
   // const sessionServer = async () => {
@@ -175,6 +201,13 @@ const Cart = (props) => {
   const typeObj = {
     product: (
       <CartItem
+        gameDay={gameDay}
+        newMember={newMember}
+        setNewMember={setNewMember}
+        fetchmid={fetchmid}
+        setFetchmid={setFetchmid}
+        startTime={startTime}
+        endTime={endTime}
         handleMin={handleMin}
         mid={mid}
         handeleClass={handeleClass}
@@ -225,11 +258,14 @@ const Cart = (props) => {
 
       {/* <PaymentForm /> */}
       <div className="container ">
-        <div className="cartTitle ">
+        <div className="cartTitle cartTitleWeb">
           <div className="row ">
-            <div className={title[0] ? 'cartTitleH1-box' : 'cartTitleH1'}>
-              <h4>購物明細</h4>
-            </div>
+            {/* <div className={title[0] ? 'cartTitleH1-box' : 'cartTitleH1'}> */}
+            <h4 className={title[0] ? 'cartTitleH1-box' : 'cartTitleH1'}>
+              購物明細
+            </h4>
+            {/* </div> */}
+
             <div>
               <h2>
                 <AiFillCaretRight color="#808080" />
@@ -250,7 +286,15 @@ const Cart = (props) => {
             </h4>
           </div>
         </div>
+        <div className="cartTitle cartTitleMobile">
+          <div className="row ">
+            <div className={title[0] ? 'cartTitleH1-box' : 'cartTitleH1'}>
+              <h4>購物明細</h4>
+            </div>
+          </div>
+        </div>
       </div>
+
       {!total && (
         <CartItemNav setType={setType} type={type} getSession={getSession} />
       )}
@@ -261,43 +305,3 @@ const Cart = (props) => {
 }
 
 export default Cart
-
-{
-  /* <>
-          <div className="cartCards">
-            <div className="cartCard">
-              <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
-              <div className="cartCardBody">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolore dolorum fugiat a doloremque ducimus? Adipisci
-                  doloremque tempore, ad unde facere, porro repudiandae alias
-                  harum, rem expedita velit aperiam iusto esse?
-                </p>
-              </div>
-            </div>
-            <div className="cartCard">
-              <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
-              <div className="cartCardBody">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolore dolorum fugiat a doloremque ducimus? Adipisci
-                  doloremque tempore, ad unde facere, porro repudiandae alias
-                  harum, rem expedita velit aperiam iusto esse?
-                </p>
-              </div>
-            </div>
-            <div className="cartCard">
-              <img src="http://fakeimg.pl/440x320/282828/EAE0D0/" alt="" />
-              <div className="cartCardBody">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dolore dolorum fugiat a doloremque ducimus? Adipisci
-                  doloremque tempore, ad unde facere, porro repudiandae alias
-                  harum, rem expedita velit aperiam iusto esse?
-                </p>
-              </div>
-            </div>
-          </div>
-        </> */
-}

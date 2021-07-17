@@ -64,7 +64,10 @@ const CartOrderItem = (props) => {
       return (
         <>
           <td>{v.cartName}</td>
-          <td>{v.cartBuyP}</td>
+          <td>
+            {v.cartBuyP * v.cartBuyQty * item.gameDay}
+            <small>/{item.gameDay}日</small>
+          </td>
           <td>{v.cartBuyQty}</td>
         </>
       )
@@ -90,101 +93,6 @@ const CartOrderItem = (props) => {
 
   return (
     <>
-      {/* <table className="cartOrderItemHeard">
-        <tbody>
-          <tr>
-            <td>{item.cartOrderId}</td>
-            <td>{item.created_at}</td>
-            <td>{item.cartStatus}</td>
-            <td>{item.cartPayName}</td>
-            <td>{item.cartTotal}</td>
-            <td>{handleOrderClass(item.orderclass)}</td>
-            
-            <td>
-              <button
-                onClick={() => {
-                  select === item.cartOrderId
-                    ? setSelect(null)
-                    : setSelect(item.cartOrderId)
-                }}
-              >
-                購買清單
-                <IoIosArrowDown />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      {item.cartOrderId === select && (
-        <div id="itemDetail" className="itemDetail">
-          <div className="cartMain cartOrderItemBody">
-            <div className="col-9">
-              <div className=" cartTable">
-                <table className="table ">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th></th>
-                      <th>商品名稱</th>
-                      <th>單價</th>
-                      <th>數量</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  {dataItem.map((v, i) => {
-                    return (
-                      <tbody className="">
-                        <tr>
-                          <th>{i + 1}</th>
-                          <td>
-                            <img
-                              src="http://fakeimg.pl/440x320/282828/EAE0D0/"
-                              alt=""
-                            />
-                          </td>
-                          {product(v)}
-                        </tr>
-                      </tbody>
-                    )
-                  })}
-                </table>
-              </div>
-            </div>
-            <div className="col-2 cartOrderItemBox">
-              <p>預定日期:</p>
-              <p>字串字串字串</p>
-              <button>取消訂單</button>
-            </div>
-          </div>
-          <div className="cartOrderDetail">
-            <div className="item1 ">
-              <ul>
-                <li>收件人姓名</li>
-                <li>收件人地址</li>
-              </ul>
-            </div>
-            <div className="item2 ">
-              <ul>
-                <li>{item.nNN}</li>
-                <li>{item.nAA}</li>
-              </ul>
-            </div>
-            <div className="item1 ">
-              <ul>
-                <li>收件人手機</li>
-                <li>運送方式</li>
-              </ul>
-            </div>
-            <div className="item2 ">
-              <ul>
-                <li>{item.nCC}</li>
-                <li>{item.cartLogisticsName}</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       <div className="containerPretty ">
         <div className="cartOrderItemHeard">
           <ul className="responsive-table">
@@ -248,10 +156,7 @@ const CartOrderItem = (props) => {
                               <tr>
                                 <th>{i + 1}</th>
                                 <td>
-                                  <img
-                                    src="http://fakeimg.pl/440x320/282828/EAE0D0/"
-                                    alt=""
-                                  />
+                                  <img src={v.product_oimg} alt="" />
                                 </td>
                                 {product(v)}
                               </tr>
@@ -261,22 +166,33 @@ const CartOrderItem = (props) => {
                       </table>
                     </div>
                   </div>
-                  <div className="col-2 cartOrderItemBox">
-                    <p>預定日期:</p>
-                    <p>字串字串字串</p>
+                  <div className="col-3 cartOrderItemBox">
+                    <p style={{ color: '#0071BC' }}>
+                      起始時間：<small>{item.startTime}</small>
+                    </p>
+
+                    <p style={{ color: '#0071BC' }} className="mt-n3">
+                      結束時間：<small>{item.endTime}</small>
+                    </p>
+                    <p style={{ color: '#0071BC' }} className="mt-n3">
+                      天數：<small>{item.gameDay}</small>
+                    </p>
+                    {console.log(item)}
                     {item.cartStatus == '待出貨' && (
                       <button
+                        className="cancelButton"
                         onClick={(e) => {
                           // console.log(item.cartOrderId)
                           // setEditOrder(item.cartOrderId)
                           Swal.fire({
                             title: '你確定要取消嗎?',
-                            text: '您確定要取消嗎？!',
+                            text: '',
                             icon: 'warning',
                             showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
+                            confirmButtonColor: '#D33',
+                            cancelButtonColor: '#3085d6',
                             confirmButtonText: '確定取消!',
+                            cancelButtonText: '我點錯了',
                           }).then((result) => {
                             if (result.isConfirmed) {
                               Swal.fire(

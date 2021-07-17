@@ -33,16 +33,16 @@ const CartHover123 = (props) => {
   // if (!getSession === 0) sessionServer()
   return (
     <>
-      {getSession.length && (
+      {getSession?.length && (
         <div className="cartHover  w-25  hovertest ">
-          {getSession.map((v, i) => {
+          {getSession?.map((v, i) => {
             return (
               <>
                 <div className="d-flex row mt-2  ">
                   <div className="col  col-12">{v.product_name}</div>
                   <div className="col  col-12 d-flex mt-1">
                     <div className="col col4 ">
-                      <img className=" w-50" src="./img/冰桶.jpeg" alt="" />
+                      <img className=" w-50" src={v.product_oimg} alt="" />
                     </div>
                     <div className="col col4  price">${v.product_price}</div>
                     <div className="col col4   price">數量：{v.quantity}</div>

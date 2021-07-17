@@ -47,54 +47,38 @@ const CartDetail = () => {
         </div>
       </div>
       <div className="CartDetailText">
-        <h4>
-          已完成訂單
-          <br />
-          感謝您的購買
-        </h4>
+        <h4>已完成訂單 </h4>
+        <h4>感謝您的購買</h4>
       </div>
-      <h5>購物明細:</h5>
-      <div className="cartMain">
+      <h5>購物明細:</h5>
+      <div className="cartMain container">
+        <div className="row cartItemDay">
+          <p>
+            <strong>起始時間：{cartId?.orderInfo.startTime}</strong>
+          </p>
+          <p>
+            <strong>/</strong>
+          </p>
+          <p>
+            <strong>結束時間：{cartId?.orderInfo.endTime}</strong>
+          </p>
+          <p>
+            <strong>/</strong>
+          </p>
+          <p>
+            <strong>租借天數：{cartId?.orderInfo.gameDay}</strong>
+          </p>
+        </div>
         <div className=" cartTable">
-          {/* <table className="table ">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>商品名稱</th>
-                <th>價格</th>
-                <th>數量</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className="">
-              {cartId?.orderItem?.map((v, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{i + 1}</td>
-                    <td>
-                      <img src="" alt="" />
-                    </td>
-
-                    <td>{v.cartName}</td>
-                    <td>{v.cartBuyP}</td>
-
-                    <td>{v.cartBuyQty}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table> */}
           {console.log(cartId?.orderItem[0].product_id)}
           {cartId?.orderItem[0].product_id && (
             <table className="table ">
               <thead>
                 <tr>
                   <th></th>
-                  <th></th>
-                  <th>商品名稱</th>
-                  <th>價格</th>
-                  <th>數量</th>
+                  <th style={{ color: '#145041' }}>商品名稱</th>
+                  <th style={{ color: '#145041' }}>價格</th>
+                  <th style={{ color: '#145041' }}>數量</th>
                   <th></th>
                 </tr>
               </thead>
@@ -102,13 +86,16 @@ const CartDetail = () => {
                 {cartId?.orderItem?.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td>{i + 1}</td>
                       <td>
-                        <img src="" alt="" />
+                        <img src={v.product_oimg} alt="" />
                       </td>
 
                       <td>{v.cartName}</td>
-                      <td>{v.cartBuyP}</td>
+                      <td>
+                        {v.cartBuyP * cartId?.orderInfo.gameDay * v.cartBuyQty}
+
+                        <small>/{cartId?.orderInfo.gameDay}日</small>
+                      </td>
 
                       <td>{v.cartBuyQty}</td>
                     </tr>
@@ -152,11 +139,10 @@ const CartDetail = () => {
       </div>
       <div className="cartPiceDetil">
         <div className="cartPiceDetilItem1">
-          <p>品項:</p>
           <p>總共消費金額:</p>
         </div>
         <div className="cartPiceDetilItem2">
-          <p>共 3 項</p> <p>{cartId.orderInfo.cartTotal}</p>
+          <p>NT ${cartId.orderInfo.cartTotal}</p>
         </div>
       </div>
       <h5>訂單明細:</h5>

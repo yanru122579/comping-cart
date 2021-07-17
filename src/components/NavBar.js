@@ -4,6 +4,7 @@ import Profile from '../images/profile.png' //profile檔案
 import { Navbar, Nav, Image } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/navnfooter.css'
+// import '../styles/cart.scss'
 import NavIcon from './NavIcon.js' //icon SVG路徑檔案
 import { Link } from 'react-router-dom'
 import $ from 'jquery'
@@ -15,7 +16,7 @@ const NavBar = (props) => {
   //設定Navbar-icon
   // 可以在各自的link中修改
   const items = [
-    { item: '找用品', link: '/ProductList', icon: 'product' },
+    { item: '找用品', link: '/product', icon: 'product' },
     { item: '找場地', link: '/Cartorder', icon: 'event' },
     { item: '找活動', link: '/cartcheck', icon: 'place' },
     { item: '找靈感', link: '/discover', icon: 'idea' },
@@ -61,8 +62,13 @@ const NavBar = (props) => {
         </Navbar.Brand>
         {/* 購物車Button */}
         <Nav className="order-lg-3 order-0">
-          <Nav.Link as={Link} to="/" className="nav-cart hovertest1">
+          <Nav.Link as={Link} to="/cart" className="nav-cart hovertest1">
             <NavIcon className="cartico" item="cart" iconstyle="navcart" />
+            {getSession?.length > 0 && (
+              <div class="nav-counter nav-counter-blue">
+                {getSession.length}
+              </div>
+            )}
             <CartHover123 className="hovertest" getSession={getSession} />
           </Nav.Link>
         </Nav>

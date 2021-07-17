@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import '../../styles/cart.scss'
 import { countries, townships, postcodes } from '../../json/townships'
@@ -8,7 +8,6 @@ import PaymentForm from './PaymentForm'
 // import { Button } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import { date } from 'yup'
-import { useEffect } from 'react'
 
 // import { withFormik, Form, Field, ErrorMessage } from 'formik'
 // import * as yup from 'yup'
@@ -18,7 +17,15 @@ import { useEffect } from 'react'
 // import Item from 'antd/lib/list/Item'
 
 function CartInfo(props) {
-  const { cartLogistics } = props
+  const {
+    cartLogistics,
+    endTime,
+    startTime,
+    fetchmid,
+    setFetchmid,
+    gameDay,
+    newMember,
+  } = props
   // console.log(countries, townships, postcodes)
   //reactBootstrap用
   const [modalShow, setModalShow] = React.useState(false)
@@ -35,7 +42,7 @@ function CartInfo(props) {
   const [userCell, setUserCell] = useState('')
   const [userEmail, setUserEmail] = useState('')
   //用來抓會員資料
-  const [fetchmid, setFetchmid] = useState('')
+  // const [fetchmid, setFetchmid] = useState('')
   // console.log(country)
   // console.log(township)
   const [countError, setCountError] = useState({
@@ -68,12 +75,12 @@ function CartInfo(props) {
     mid: mid,
     cartTotal:
       sum(getSession) >= 10000
-        ? (sum(getSession) -
-            1130 +
+        ? (sum(getSession) * gameDay -
+            (newMember ? 100 : 0) +
             (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)) *
           0.9
-        : sum(getSession) -
-          1130 +
+        : sum(getSession) * gameDay -
+          (newMember ? 100 : 0) +
           (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0),
     cartDescription: '1',
     cartStatus: '待出貨',
@@ -101,17 +108,18 @@ function CartInfo(props) {
           cartBuyQty: item.quantity,
           cartBuyP: item.product_price,
           cartOrderId: orderid,
+          product_oimg: item.product_oimg,
         }
         data.orderItem.push(tempObj)
       }
 
       data.orderInfo = {
-        nNN: orderer ? userName : inputs.nNN,
+        nNN: inputs.nNN,
         countries: country,
         townships: township,
         nAA: inputs.nAA,
-        nCC: orderer ? userCell : inputs.nCC,
-        nEE: orderer ? userEmail : inputs.nEE,
+        nCC: inputs.nCC,
+        nEE: inputs.nEE,
         cartPayId: inputs.cartPayId,
         cartLogisticsId: inputs.cartLogisticsId,
         mid: inputs.mid,
@@ -121,6 +129,10 @@ function CartInfo(props) {
         cartOrderId: orderid,
         orderclass: inputs.orderclass,
         created_at: new Date(),
+        startTime: startTime,
+        endTime: endTime,
+        gameDay: gameDay,
+        newMember: newMember,
       }
       console.log('一開始收到的資料', data)
       //寫入的網址
@@ -144,7 +156,7 @@ function CartInfo(props) {
       setTimeout(() => {
         sessionClear()
         // setSubmitting(false)
-
+        userNewMember(e)
         history.push('/cartdetail', { cartId: data })
         Swal.fire('結帳成功!', '感謝您的購買!', 'success')
       }, 500)
@@ -158,24 +170,44 @@ function CartInfo(props) {
     }
   }
 
-  //抓會員資料
-  const memberToSever = async () => {
-    const url = `http://localhost:4000/cartorder/member/1`
+  async function userNewMember(e) {
+    // e.preventDefault()
+
+    const data = {
+      newMember: 0,
+    }
+    const url = `http://localhost:4000/cartorder/coupon/183`
+
     const request = new Request(url, {
-      method: 'GET',
-      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(data),
       headers: new Headers({
         Accept: 'application/json',
+        'Content-Type': 'application/json',
       }),
     })
     const response = await fetch(request)
-    const data = await response.json()
-    setFetchmid(data)
+    const dataRes = await response.json()
+    // console.log('伺服器回傳的json資料', dataRes)
   }
-  console.log(fetchmid)
-  useEffect(() => {
-    memberToSever()
-  }, [])
+
+  //抓會員資料
+  // const memberToSever = async () => {
+  //   const url = `http://localhost:4000/cartorder/member/${mId}`
+  //   const request = new Request(url, {
+  //     method: 'GET',
+  //     credentials: 'include',
+  //     headers: new Headers({
+  //       Accept: 'application/json',
+  //     }),
+  //   })
+  //   const response = await fetch(request)
+  //   const data = await response.json()
+  //   setFetchmid(data)
+  // }
+  // useEffect(() => {
+  //   memberToSever()
+  // }, [])
 
   //處理每個欄位的變動
   const handelChange = (e) => {
@@ -262,6 +294,17 @@ function CartInfo(props) {
     }
   }
 
+  useEffect(() => {
+    if (orderer) {
+      setInputs({
+        ...inputs,
+        nNN: fetchmid.fName + fetchmid.lName,
+        nCC: fetchmid.phone,
+        nEE: fetchmid.email,
+      })
+    }
+  }, [orderer])
+
   return (
     <>
       {/* <div className="container">
@@ -279,18 +322,18 @@ function CartInfo(props) {
           <p>
             NT $
             {sum(getSession) >= 10000
-              ? (sum(getSession) -
-                  1130 +
+              ? (sum(getSession) * gameDay -
+                  (newMember ? 100 : 0) +
                   (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)) *
                 0.9
-              : sum(getSession) -
-                1130 +
+              : sum(getSession) * gameDay -
+                (newMember ? 100 : 0) +
                 (cartLogistics == 1 ? +(pTotal(getSession) * 100) : 0)}
           </p>
         </div>
       </div>
       <h5>2.收貨人資料</h5>
-      <div className="cartMain">
+      <div className="cartMain ">
         <form
           name="Newebpay"
           method="post"
@@ -300,28 +343,25 @@ function CartInfo(props) {
           onChange={handleChangeInput}
           onInvalid={handleInvalid}
         >
-          {/* MerchantID:
-          <input type="text" name="MS121481874" value="" />
-          <br /> */}
-          {/* <input type="text" name="MS121481874" value="MS121481874" /> */}
           <br />
           <label htmlFor="">訂購人姓名:</label>
           {/* <br /> */}
           <input
             name="userName"
             type="text"
-            value={fetchmid[0]?.fName + fetchmid[0]?.lName}
+            value={fetchmid.fName + fetchmid.lName}
             onChange={(e) => {
               setUserName(e.target.value)
             }}
           />
+
           <br />
           <label htmlFor="">訂購人手機:</label>
           <br />
           <input
             name="userCell"
             type="text"
-            value={fetchmid[0]?.phone}
+            value={fetchmid.phone}
             onChange={(e) => {
               setUserCell(e.target.value)
             }}
@@ -332,7 +372,7 @@ function CartInfo(props) {
           <input
             name="userEmail"
             type="email"
-            value={fetchmid[0]?.email}
+            value={fetchmid.email}
             onChange={(e) => {
               setUserEmail(e.target.value)
             }}
@@ -359,9 +399,7 @@ function CartInfo(props) {
             type="text"
             name="nNN"
             ref={nNNRef}
-            value={
-              orderer ? fetchmid[0]?.fName + fetchmid[0]?.lName : inputs.nNN
-            }
+            value={inputs.nNN}
             onChange={handelChange}
             placeholder="請輸入收件人姓名"
             required
@@ -378,7 +416,8 @@ function CartInfo(props) {
             type="text"
             name="nCC"
             ref={nCCRef}
-            value={orderer ? fetchmid[0]?.phone : inputs.nCC}
+            // defaultValue={orderer && fetchmid[0]?.phone}
+            value={inputs.nCC}
             onChange={handelChange}
             placeholder="請輸入手機"
             pattern="09\d{2}-?\d{3}-?\d{3}"
@@ -397,7 +436,7 @@ function CartInfo(props) {
             type="email"
             name="nEE"
             ref={nEERef}
-            value={orderer ? fetchmid[0]?.email : inputs.nEE}
+            value={inputs.nEE}
             onChange={handelChange}
             placeholder="請輸入信箱"
             required

@@ -125,10 +125,7 @@ const CartCheckOrder = () => {
                                     <b>{i + 1}</b>
                                   </td>
                                   <td>
-                                    <img
-                                      src="http://fakeimg.pl/440x320/282828/EAE0D0/"
-                                      alt=""
-                                    />
+                                    <img src={v.product_oimg} alt="" />
                                   </td>
                                   <td>{v.cartName}</td>
                                   <td>{v.cartBuyP}</td>
@@ -140,9 +137,18 @@ const CartCheckOrder = () => {
                         </table>
                       </div>
                     </div>
-                    <div className="col-2 cartOrderItemBox">
-                      <p>預定日期:</p>
-                      <p>字串字串字串</p>
+                    <div className="col-3 cartOrderItemBox">
+                      <p style={{ color: '#0071BC' }}>
+                        起始時間：<small>{orderCheck[0]?.startTime}</small>
+                      </p>
+
+                      <p style={{ color: '#0071BC' }} className="mt-n3">
+                        結束時間：<small>{orderCheck[0]?.endTime}</small>
+                      </p>
+                      <p style={{ color: '#0071BC' }} className="mt-n3">
+                        天數：<small>{orderCheck[0]?.gameDay}</small>
+                      </p>
+                      {console.log(orderCheck[0])}
                     </div>
                   </div>
                   <div className="cartOrderDetail">
